@@ -1,15 +1,127 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-
-<title>Hello world!</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PTU 데모 v2</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+  <!-- 헤더 -->
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#">PTU</a>
+      <form class="top-search" onsubmit="return false;">
+        <input type="search" placeholder="검색어를 입력하세요" />
+        <button>검색</button>
+      </form>
+      <nav class="top-icons">
+        <a href="#" aria-label="cart">🛒</a>
+        <a href="#" aria-label="favorite">⭐</a>
+      </nav>
+    </div>
+    <nav class="tabs">
+      <div class="wrap">
+        <a href="#">AI견적</a>
+        <a href="#">중고PC</a>
+        <a href="#">노트북</a>
+        <a href="#">FAQ</a>
+        <a href="#">이벤트</a>
+      </div>
+    </nav>
+  </header>
 
-<h1>Test Page</h1>
+  <!-- 배너 -->
+  <section class="banner">
+    <div class="wrap">정보통신학과 파이팅 💪</div>
+  </section>
 
+  <!-- 카드 -->
+  <section class="wrap card-row">
+    <img src="LOL.png" alt="롤">
+    <img src="배그.png" alt="배그">
+    <img src="ppt.png" alt="PPT">
+    <img src="컴ㅍ푸타.png" alt="데스크 셋업">
+    <img src="노트북1.png" alt="노트북">
+  </section>
+
+  <!-- 900px 고정: 검색 + 필터 -->
+  <section class="col">
+    <form class="hero-search" onsubmit="return false;">
+      <input type="search" placeholder="상품명을 검색하세요.">
+      <button>검색</button>
+    </form>
+
+    <section class="filter">
+      <header class="filter-head">
+        <div><strong>CPU</strong> <span class="muted">상품수: <b>11,689개</b></span></div>
+        <button class="ghost">옵션 전체보기 ▾</button>
+      </header>
+
+      <!-- 그룹: 제조사 -->
+      <div class="filter-group">
+        <h4>제조사</h4>
+        <div class="grid">
+          <label><input type="checkbox"> 인텔</label>
+          <label><input type="checkbox"> AMD</label>
+        </div>
+      </div>
+
+      <!-- 그룹: 인텔 CPU구분 -->
+      <div class="filter-group">
+        <h4>인텔 CPU구분</h4>
+        <div class="grid">
+          <label><input type="checkbox"> 코어 i9</label>
+          <label><input type="checkbox"> 코어 i7</label>
+          <label><input type="checkbox"> 코어 i5</label>
+          <label><input type="checkbox"> 코어 i3</label>
+          <label><input type="checkbox"> 펜티엄/셀러론</label>
+        </div>
+      </div>
+
+      <!-- 그룹: AMD CPU세대 -->
+      <div class="filter-group">
+        <h4>AMD CPU세대</h4>
+        <div class="grid">
+          <label><input type="checkbox"> 라이젠 9(5세대)</label>
+          <label><input type="checkbox"> 라이젠 7(5세대)</label>
+          <label><input type="checkbox"> 라이젠 5(5세대)</label>
+          <label><input type="checkbox"> 라이젠 7(4세대)</label>
+          <label><input type="checkbox"> 라이젠 5(4세대)</label>
+          <label><input type="checkbox"> 라이젠 3</label>
+        </div>
+      </div>
+
+      <!-- 그룹: 소켓 규격 -->
+      <div class="filter-group">
+        <h4>소켓 규격</h4>
+        <div class="grid">
+          <label><input type="checkbox"> LGA1700</label>
+          <label><input type="checkbox"> LGA1200</label>
+          <label><input type="checkbox"> AM5</label>
+          <label><input type="checkbox"> AM4</label>
+        </div>
+      </div>
+
+      <!-- 그룹: 코어 수 -->
+      <div class="filter-group">
+        <h4>코어 수</h4>
+        <div class="grid">
+          <label><input type="checkbox"> 32코어</label>
+          <label><input type="checkbox"> 24코어</label>
+          <label><input type="checkbox"> 16코어</label>
+          <label><input type="checkbox"> 12코어</label>
+          <label><input type="checkbox"> 10코어</label>
+          <label><input type="checkbox"> 8코어</label>
+          <label><input type="checkbox"> 6코어</label>
+          <label><input type="checkbox"> 4코어</label>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap">© PTU InfoCom</div>
+  </footer>
 </body>
-
 </html>

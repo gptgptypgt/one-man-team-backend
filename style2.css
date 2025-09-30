@@ -1,0 +1,107 @@
+:root{
+  --green:#2e7d32;
+  --green-700:#1b5e20;
+  --line:#e9ecef;
+  --muted:#6b7280;
+  --radius:8px;
+  --wrap:1100px;
+}
+
+/* 기본 */
+*{box-sizing:border-box}
+html,body{margin:0;font-family:Inter,"Noto Sans KR",system-ui,Segoe UI,Roboto,Helvetica,Arial}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 16px}
+
+/* 헤더 */
+.site-header .wrap{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:14px 16px}
+.brand{font-weight:900;text-decoration:none;color:var(--green);font-size:22px}
+.top-search{flex:1;display:flex;gap:0}
+.top-search input{flex:1;padding:9px 12px;border:1px solid var(--line);border-right:0;border-radius:6px 0 0 6px}
+.top-search button{padding:9px 14px;border:1px solid var(--green);background:var(--green);color:#fff;border-radius:0 6px 6px 0;cursor:pointer}
+.top-icons a{margin-left:10px;text-decoration:none;color:#111}
+
+.tabs{background:var(--green)}
+.tabs .wrap{display:flex;gap:18px}
+.tabs a{color:#fff;text-decoration:none;padding:1px 0;opacity:.95}
+.tabs a:hover{opacity:1}
+
+/* 배너 */
+.banner{background:#e8f5e9;color:var(--green);font-weight:700}
+.banner .wrap{padding:10px 16px;text-align:center}
+/* --- 상단 연한 스트립(선택) --- */
+.notice-strip{
+  background: #eaf4ec;           /* 연한 초록 톤 */
+  border-bottom: 1px solid var(--line);
+}
+.notice-strip .wrap{padding:10px 16px;color:#1f5d27;font-weight:600}
+
+/* --- 히어로 섹션 --- */
+.hero{
+  background:#fff;
+}
+.hero-inner{
+  padding: 65px 16px 36px;        /* 위/옆/아래 여백 */
+  text-align:center;
+}
+.hero-title{
+  margin: 8px 0 6px;
+  font-size: 45px;                /* 스샷 느낌의 굵은 큰 타이틀 */
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing:-0.5px;
+}
+.hero-title span{ color: var(--green); }
+.hero-sub{
+  margin: 0 auto 24px;
+  color: #6b7280;                 /* muted */
+  font-size: 18px;
+}
+
+/* --- 말풍선형 입력창 --- */
+.ask{
+  width: 900px;                   /* 요청: 900px 고정 */
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 18px 18px 22px;
+  background: #eef2f5;            /* 매우 연한 회색-블루 */
+  border-radius: 28px;            /* 둥근 말풍선 */
+  box-shadow: 0 4px 18px rgba(0,0,0,.08);
+}
+.ask input{
+  flex: 1;
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  outline: none;
+  color: #111;
+}
+.ask input::placeholder{ color:#9aa3af; }
+
+.ask button{
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 0;
+  background: #6ea8fe;           /* 파란 전송 버튼 */
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex; align-items:center; justify-content:center;
+  box-shadow: 0 6px 14px rgba(110,168,254,.35);
+  transition: transform .08s ease, filter .15s ease;
+}
+.ask button:hover{ filter: brightness(1.05); }
+.ask button:active{ transform: translateY(1px); }
+
+/* --- 반응형 --- */
+@media (max-width: 1024px){
+  .hero-title{ font-size: 36px; }
+  .ask{ width: 720px; }
+}
+@media (max-width: 640px){
+  .hero-title{ font-size: 28px; }
+  .hero-sub{ font-size: 15px; }
+  .a
+

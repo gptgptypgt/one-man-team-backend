@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ptu 이벤트 쿠폰함</title>
+<style>
+:root{
+  --wrap:1120px;
+  --line:#e5e7eb;
+  --muted:#6b7280;
+  --text:#111827;
+  --blue:#2563eb;
+  --green:#2e7d32;
+  --danger:#ef4444;
+}
+*{box-sizing:border-box}
+html,body{margin:0;font-family:Inter,"Noto Sans KR",system-ui,Segoe UI,Roboto,Helvetica,Arial;color:var(--text);background:#f7f7fb}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:20px}
+
+/* 헤더 */
+.page-title{margin:8px 0 16px}
+.page-title h1{font-size:28px;margin:0;font-weight:900;color:var(--green)}
+
+/* 상단 도구줄 */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:10px 0 14px}
+.tabs{display:flex;gap:8px}
+.tab{padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#374151;cursor:pointer;font-weight:700}
+.tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.select{display:flex;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.select select{border:0;outline:0;background:transparent;font-size:14px}
+
+/* 필터 */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#374151;font-size:12px}
+
+/* 그리드 */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .12s ease, box-shadow .12s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.08)}
+.thumb{position:relative;aspect-ratio:16/9;background-size:cover;background-position:center}
+.state{position:absolute;left:10px;top:10px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;color:#fff}
+.state.on{background:linear-gradient(90deg,#16a34a,#22c55e)}
+.state.off{background:linear-gradient(90deg,#9ca3af,#6b7280)}
+
+/* 임박 배지 */
+.due{position:absolute;right:10px;top:10px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;color:#fff;background:linear-gradient(90deg,#ef4444,#f97316);animation:pulse 1.2s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+
+.body{padding:12px}
+.ttl{font-weight:800;line-height:1.4;font-size:15px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:44px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;color:var(--muted);font-size:12px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tag{padding:4px 8px;border-radius:999px;font-size:11px;border:1px solid var(--line);background:#f9fafb}
+.tag.gift{border-color:#f59e0b;background:#fffbeb}
+.tag.point{border-color:#06b6d4;background:#ecfeff}
+.tag.sale{border-color:#ef4444;background:#fff1f2}
+
+/* 푸터 & 액션 */
+.footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.stats{display:flex;gap:10px;color:#6b7280;font-size:12px}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{padding:8px 12px;border-radius:9px;border:1px solid #dbeafe;background:#eff6ff;color:#1d4ed8;font-weight:800;text-decoration:none;cursor:pointer}
+.btn.primary{background:#2563eb;border-color:#2563eb;color:#fff}
+.btn[disabled], .btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.icon-btn{padding:8px 10px;border:1px solid var(--line);background:#fff;border-radius:9px;cursor:pointer;color:#374151}
+.icon-btn.saved{border-color:#22c55e;color:#22c55e;background:#ecfdf5}
+.saved-badge{margin-left:6px;font-size:11px;color:#16a34a}
+
+/* 페이지네이션 */
+.paging{display:flex;justify-content:center;gap:6px;margin:16px 0 8px}
+.page-btn{min-width:36px;height:36px;border:1px solid var(--line);background:#fff;border-radius:8px;display:grid;place-items:center;cursor:pointer}
+.page-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:900}
+.empty{padding:40px 16px;text-align:center;color:#6b7280;background:#fff;border:1px solid var(--line);border-radius:12px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="page-title">
+      <h1>ptu 이벤트 쿠폰함</h1>
+    </div>
+
+    <div class="toolbar">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-state="all">전체 <span id="cnt-all"></span></button>
+        <button class="tab" data-state="ongoing">진행중 <span id="cnt-on"></span></button>
+        <button class="tab" data-state="ended">종료 <span id="cnt-off"></span></button>
+      </div>
+
+      <div class="tools">
+        <div class="select">
+          <select id="sort">
+            <option value="recent">정렬: 최신순</option>
+            <option value="endSoon">마감임박</option>
+            <option value="popular">조회수순</option>
+            <option value="comments">댓글순</option>
+          </select>
+        </div>
+        <!-- 검색창 제거 -->
+      </div>
+    </div>
+
+    <div class="filters">
+      <span class="badge">브랜드
+        <select id="brand" style="border:0;outline:0;margin-left:6px">
+          <option value="all">전체</option>
+        </select>
+      </span>
+      <label class="badge"><input type="checkbox" id="benefit-gift"> 사은품</label>
+      <label class="badge"><input type="checkbox" id="benefit-point"> 적립금</label>
+      <label class="badge"><input type="checkbox" id="benefit-sale"> 할인</label>
+    </div>
+
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty" style="display:none">조건에 맞는 이벤트가 없습니다.</div>
+
+    <div id="paging" class="paging"></div>
+  </div>
+
+<script>
+/* --------- 데모 데이터 + 썸네일 경로 ---------- */
+const data = [
+  { id:1,  title:"게이밍 노트북 구매 고객 한정 사은품 증정", brand:"PTU컴퍼니", start:"2025-09-20", end:"2025-10-20", views:921,  comments:18, benefits:["gift"],          status:"ongoing", thumb:"event1.png"  },
+  { id:2,  title:"그래픽카드 특가! 한정 수량 얼리버드",       brand:"GreenTech",  start:"2025-09-28", end:"2025-10-05", views:1241, comments:33, benefits:["sale"],          status:"ended",   thumb:"event2.png"  },
+  { id:3,  title:"SSD 구매 시 적립금 5% 페이백",              brand:"PTU컴퍼니",   start:"2025-09-25", end:"2025-10-31", views:722,  comments:12, benefits:["point"],         status:"ongoing", thumb:"event3.png"  },
+  { id:4,  title:"CPU 업그레이드 응모 이벤트",                 brand:"CoreMax",     start:"2025-09-02", end:"2025-09-30", views:1883, comments:77, benefits:["gift","point"], status:"ended",   thumb:"event4.png"  },
+  { id:5,  title:"모니터 대전: 주말 한정 파격 할인",           brand:"ViewPlus",    start:"2025-10-01", end:"2025-10-06", views:531,  comments:9,  benefits:["sale"],          status:"ongoing", thumb:"event5.png"  },
+  { id:6,  title:"키보드/마우스 세트 구매 시 전용 파우치 증정", brand:"PTU컴퍼니",   start:"2025-09-10", end:"2025-11-01", views:389,  comments:6,  benefits:["gift"],          status:"ongoing", thumb:"event6.png"  },
+  { id:7,  title:"올인원 PC 댓글 참여 이벤트",                 brand:"GreenTech",   start:"2025-08-31", end:"2025-09-07", views:2103, comments:112,benefits:["point"],         status:"ended",   thumb:"event7.png"  },
+  { id:8,  title:"수험생 특별전: 본체 구매 7% 즉시할인",        brand:"CoreMax",     start:"2025-10-02", end:"2025-10-15", views:841,  comments:19, benefits:["sale","point"], status:"ongoing", thumb:"event8.png"  },
+  { id:9,  title:"PTU 가을맞이 굿즈 추첨",                     brand:"PTU컴퍼니",   start:"2025-09-18", end:"2025-10-03", views:466,  comments:15, benefits:["gift"],          status:"ended",   thumb:"event9.png"  },
+  { id:10, title:"파워서플라이 런칭 기념 참여형 이벤트",        brand:"PowerBee",    start:"2025-09-27", end:"2025-10-18", views:612,  comments:22, benefits:["gift","sale"], status:"ongoing", thumb:"event10.png" },
+  { id:11, title:"RAM 페스티벌 댓글 이벤트 (경품 다수)",        brand:"Memoria",     start:"2025-09-01", end:"2025-10-04", views:1502, comments:81, benefits:["gift"],          status:"ended",   thumb:"event11.png" },
+  { id:12, title:"케이스 구매고객 3% 페이백 + 사은품",          brand:"ViewPlus",    start:"2025-09-29", end:"2025-10-25", views:390,  comments:7,  benefits:["gift","point"], status:"ongoing", thumb:"event12.png" },
+];
+
+/* --------- 보관(저장) 상태 (localStorage) --------- */
+const SAVED_KEY = "ptu_saved_events";
+let savedSet = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || "[]"));
+function persistSaved(){ localStorage.setItem(SAVED_KEY, JSON.stringify([...savedSet])); }
+
+/* --------- 상태 --------- */
+let state = {
+  tab: "all",            // all | ongoing | ended
+  sort: "recent",
+  brand: "all",
+  benefit: { gift:false, point:false, sale:false },
+  page: 1,
+  perPage: 9
+};
+
+/* --------- 유틸 --------- */
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const fmt = (n)=> n.toLocaleString('ko-KR');
+function daysLeft(item){ return Math.ceil((new Date(item.end) - new Date())/86400000); }
+function isImminent(item){ const d=daysLeft(item); return item.status==="ongoing" && d>=0 && d<=3; }
+
+/* --------- 브랜드 옵션 --------- */
+(function initBrands(){
+  const brands = Array.from(new Set(data.map(d=>d.brand))).sort();
+  const sel = $("#brand");
+  brands.forEach(b=>{
+    const o = document.createElement('option');
+    o.value=b;o.textContent=b; sel.appendChild(o);
+  });
+})();
+
+/* --------- 렌더 --------- */
+function applyFilters(){
+  let list = [...data];
+
+  // 탭
+  if(state.tab!=="all") list = list.filter(d=>d.status===state.tab);
+
+  // 브랜드
+  if(state.brand!=="all") list = list.filter(d=>d.brand===state.brand);
+
+  // 혜택
+  const need = Object.entries(state.benefit).filter(([k,v])=>v).map(([k])=>k);
+  if(need.length) list = list.filter(d=> need.every(k=>d.benefits.includes(k)));
+
+  // 정렬
+  switch(state.sort){
+    case "recent": list.sort((a,b)=> new Date(b.start)-new Date(a.start)); break;
+    case "endSoon":
+      list = list.filter(d=>d.status==="ongoing");
+      list.sort((a,b)=> new Date(a.end)-new Date(b.end)); break;
+    case "popular": list.sort((a,b)=> b.views-a.views); break;
+    case "comments": list.sort((a,b)=> b.comments-a.comments); break;
+  }
+
+  // 카운트
+  $("#cnt-all").textContent = `(${data.length})`;
+  $("#cnt-on").textContent  = `(${data.filter(d=>d.status==='ongoing').length})`;
+  $("#cnt-off").textContent = `(${data.filter(d=>d.status==='ended').length})`;
+
+  // 페이징
+  const total = list.length;
+  const start = (state.page-1)*state.perPage;
+  const pageList = list.slice(start, start+state.perPage);
+  renderGrid(pageList);
+  renderPaging(Math.ceil(total/state.perPage));
+  $("#empty").style.display = total? "none":"block";
+}
+
+function renderGrid(list){
+  const g = $("#grid");
+  g.innerHTML="";
+  list.forEach(it=>{
+    const on = it.status==="ongoing";
+    const left = daysLeft(it);
+    const imminent = isImminent(it);
+    const saved = savedSet.has(it.id);
+
+    // 썸네일이 위에 보이도록 url을 먼저, 그라데이션을 보조 배경으로
+    const thumbStyle = it.thumb
+      ? `style="background-image:url('${it.thumb}'), linear-gradient(135deg,#e0f2fe,#e9d5ff)"`
+      : `style="background-image:linear-gradient(135deg,#e0f2fe,#e9d5ff)"`;
+
+    const card = document.createElement('article');
+    card.className="card";
+    card.innerHTML = `
+      <div class="thumb" ${thumbStyle}>
+        <span class="state ${on?'on':'off'}">${on?'진행중':'종료'}</span>
+        ${imminent ? `<span class="due">임박</span>` : ``}
+      </div>
+      <div class="body">
+        <div class="ttl">${it.title}</div>
+        <div class="meta">
+          <span>${it.brand}</span>
+          <span>·</span>
+          <span>${it.start} ~ ${it.end}${on && left>=0 ? ` (D-${left})`:""}</span>
+          ${saved ? `<span class="saved-badge">· 보관됨</span>` : ``}
+        </div>
+        <div class="tags">
+          ${it.benefits.includes('gift')?`<span class="tag gift">사은품</span>`:""}
+          ${it.benefits.includes('point')?`<span class="tag point">적립금</span>`:""}
+          ${it.benefits.includes('sale')?`<span class="tag sale">할인</span>`:""}
+        </div>
+
+        <div class="footer">
+          <div class="stats">
+            <span>조회 ${fmt(it.views)}</span>
+            <span>댓글 ${fmt(it.comments)}</span>
+          </div>
+          <div class="actions">
+            <button class="icon-btn save-btn ${saved?'saved':''}" data-id="${it.id}" aria-pressed="${saved?'true':'false'}">
+              ${saved ? '보관됨' : '보관'}
+            </button>
+            <button class="btn primary download-btn" data-id="${it.id}" ${on ? '' : 'aria-disabled="true" disabled'}>
+              쿠폰 받기
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    g.appendChild(card);
+  });
+}
+
+function renderPaging(pages){
+  const p = $("#paging"); p.innerHTML="";
+  if(pages<=1){return}
+  const btn=(i,label=i,cls="")=>{
+    const b=document.createElement('button'); b.className="page-btn "+cls; b.textContent=label;
+    b.addEventListener('click',()=>{ state.page=i; applyFilters(); window.scrollTo({top:0,behavior:'smooth'}); });
+    return b;
+  };
+  const cur=state.page;
+  p.appendChild(btn(Math.max(1,cur-1),"‹"));
+  for(let i=1;i<=pages;i++){ p.appendChild(btn(i,String(i), i===cur?"active":"")); }
+  p.appendChild(btn(Math.min(pages,cur+1),"›"));
+}
+
+/* --------- 액션: 보관 토글 & 쿠폰 다운로드 --------- */
+function toggleSave(id){
+  if(savedSet.has(id)) savedSet.delete(id);
+  else savedSet.add(id);
+  persistSaved();
+  applyFilters();
+}
+
+function generateCouponCode(item){
+  const seed = `${item.id}-${item.brand}-${item.end}-${Date.now()}`;
+  // 간단한 해시 기반 코드(가독성 위해 대문자/숫자만)
+  let h=0; for(let i=0;i<seed.length;i++){ h = (h*31 + seed.charCodeAt(i)) >>> 0; }
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for(let i=0;i<12;i++){ code += alphabet[(h>> (i*2)) % alphabet.length]; }
+  return code.replace(/(.{4})/g,"$1-").replace(/-$/,''); // XXXX-XXXX-XXXX
+}
+
+function downloadCoupon(item){
+  if(item.status!=="ongoing"){ alert("종료된 이벤트입니다."); return; }
+  const code = generateCouponCode(item);
+  const content = [
+    "PTU EVENT COUPON",
+    "-----------------",
+    `제목: ${item.title}`,
+    `브랜드: ${item.brand}`,
+    `기간: ${item.start} ~ ${item.end}`,
+    `쿠폰코드: ${code}`,
+    "",
+    "※ 데모용 쿠폰 파일입니다."
+  ].join("\n");
+  const blob = new Blob([content], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `ptu-coupon-${item.id}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(a.href);
+}
+
+/* 이벤트 위임 */
+document.getElementById("grid").addEventListener("click", (e)=>{
+  const saveBtn = e.target.closest(".save-btn");
+  if(saveBtn){
+    const id = parseInt(saveBtn.dataset.id,10);
+    toggleSave(id);
+    return;
+  }
+  const dlBtn = e.target.closest(".download-btn");
+  if(dlBtn){
+    const id = parseInt(dlBtn.dataset.id,10);
+    const item = data.find(d=>d.id===id);
+    if(item) downloadCoupon(item);
+  }
+});
+
+/* --------- 이벤트 바인딩 --------- */
+$("#tabs").addEventListener('click',e=>{
+  const t=e.target.closest('.tab'); if(!t) return;
+  $$('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
+  state.tab=t.dataset.state; state.page=1; applyFilters();
+});
+$("#sort").addEventListener('change',e=>{ state.sort=e.target.value; state.page=1; applyFilters(); });
+$("#brand").addEventListener('change',e=>{ state.brand=e.target.value; state.page=1; applyFilters(); });
+$("#benefit-gift").addEventListener('change',e=>{ state.benefit.gift=e.target.checked; state.page=1; applyFilters(); });
+$("#benefit-point").addEventListener('change',e=>{ state.benefit.point=e.target.checked; state.page=1; applyFilters(); });
+$("#benefit-sale").addEventListener('change',e=>{ state.benefit.sale=e.target.checked; state.page=1; applyFilters(); });
+
+/* --------- 시작 --------- */
+applyFilters();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+:root{
+  --green:#2e7d32;
+  --green-700:#1b5e20;
+  --line:#e9ecef;
+  --muted:#6b7280;
+  --radius:8px;
+  --wrap:1100px;
+}
+
+/* 기본 */
+*{box-sizing:border-box}
+html,body{margin:0;font-family:Inter,"Noto Sans KR",system-ui,Segoe UI,Roboto,Helvetica,Arial}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 16px}
+
+/* 헤더 */
+.site-header .wrap{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:14px 16px}
+.brand{font-weight:900;text-decoration:none;color:var(--green);font-size:22px}
+.top-search{flex:1;display:flex;gap:0}
+.top-search input{flex:1;padding:9px 12px;border:1px solid var(--line);border-right:0;border-radius:6px 0 0 6px}
+.top-search button{padding:9px 14px;border:1px solid var(--green);background:var(--green);color:#fff;border-radius:0 6px 6px 0;cursor:pointer}
+.top-icons a{margin-left:10px;text-decoration:none;color:#111}
+
+.tabs{background:var(--green)}
+.tabs .wrap{display:flex;gap:18px}
+.tabs a{color:#fff;text-decoration:none;padding:1px 0;opacity:.95}
+.tabs a:hover{opacity:1}
+
+/* 배너 */
+.banner{background:#e8f5e9;color:var(--green);font-weight:700}
+.banner .wrap{padding:10px 16px;text-align:center}
+
+/* 상품 섹션 */
+.product-section {
+  margin: 40px auto;
+}
+
+/* 상품 그리드 */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* 카드 스타일 */
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: 0.2s;
+}
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.product-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+.product-info {
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.product-info h3 {
+  font-size: 14px;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+.product-info p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: auto;
+}
+.price {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #222;
+}
+.buy-btn {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.buy-btn:hover {
+  background: #c62828;
+}

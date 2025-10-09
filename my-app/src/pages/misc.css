@@ -1,0 +1,39 @@
+.product-section { margin: 40px auto; }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: 0.2s;
+}
+.product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.product-card img { width: 100%; height: 180px; object-fit: cover; }
+
+.product-info {
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.product-info h3 { font-size: 14px; margin: 0 0 8px; line-height: 1.4; }
+.product-info p { font-size: 13px; color: var(--muted); margin-bottom: auto; }
+
+.price { font-size: 16px; font-weight: bold; margin: 10px 0; color: #222; }
+
+.buy-btn {
+  background: #e53935; color: #fff; border: none; border-radius: 4px;
+  padding: 8px; cursor: pointer; font-weight: bold;
+}
+.buy-btn:hover { background: #c62828; }
+
+/* 탭 active 표시 (NavLink와 함께 사용) */
+.tabs a.active { opacity: 1; text-decoration: underline; }

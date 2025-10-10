@@ -1,3 +1,5 @@
+// ✅ App.jsx (수정 완료 버전)
+import { useLocation } from "react-router-dom";
 import { useMemo, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header.jsx'
@@ -14,7 +16,6 @@ import Events from './pages/Events.jsx';
 import Notebooks from "./pages/Notebooks";
 import Login from "./pages/Login.jsx";
 import Favorites from "./pages/Favorites";
-
 
 const CATEGORIES = ['CPU', '그래픽카드', '메인보드', '파워']
 
@@ -60,19 +61,25 @@ function Home() {
 }
 
 export default function App() {
+  const location = useLocation();
+
+  const hideHeader = ["/favorites"].includes(location.pathname);
+
   return (
     <>
-      <Header />
+      {!hideHeader && <Header />}
+
       <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/ai" element={<AiQuote/>} />
-        <Route path="/misc" element={<Misc/>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/ai" element={<AiQuote />} />
+        <Route path="/misc" element={<Misc />} />
         <Route path="/events" element={<Events />} />
         <Route path="/notebooks" element={<Notebooks />} />
         <Route path="/login" element={<Login />} />
         <Route path="/favorites" element={<Favorites />} />
       </Routes>
+
       <Footer />
     </>
-  )
+  );
 }

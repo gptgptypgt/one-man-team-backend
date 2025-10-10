@@ -1,90 +1,68 @@
 import React from "react";
-import "../style.css"; // 기존 CSS 그대로 사용
+import { useNavigate } from "react-router-dom"; // ✅ 추가
+import "./Favorites.css";
 
 export default function Favorites() {
+  const navigate = useNavigate(); // ✅ 페이지 이동 기능 준비
+
+  const handleLoginClick = () => {
+    navigate("/login"); // ✅ 로그인 페이지로 이동
+  };
+
   return (
-    <div className="favorites-page">
-      {/* 상단 헤더 */}
-      <header className="site-header">
-        <div className="wrap header-row">
-          <a className="brand" href="#">
-            {/* <img src="ptu_logo.png" alt="SHOP PTU" /> */}
-            <span className="brand-mark">
-              SHOP <b>PTU</b>
-            </span>
-          </a>
-
-          <nav className="top-helpers">
-            <a href="#" className="helper">
-              FAQ
-            </a>
-          </nav>
-        </div>
-      </header>
-
-      {/* 페이지 전체 레이아웃 */}
-      <main className="wrap layout">
-        {/* 왼쪽 사이드 */}
+    <main className="favorites-wrap">
+      <div className="container">
+        {/* 왼쪽 사이드 메뉴 */}
         <aside className="sidebar">
-          <section className="card profile">
-            <h2 className="card-title">나의 쇼핑내역</h2>
+          <h2 className="brand">SHOP <b>PTU</b></h2>
 
-            <div className="profile-box">
-              <div className="user-id">로그인이 필요합니다</div>
-              {/* 나중에 로그인 페이지 연결 */}
-              <a href="/login" className="alt-btn">
-                로그인
-              </a>
-            </div>
-          </section>
+          <div className="card">
+            <h3>나의 쇼핑내역</h3>
+            <p className="login-text">로그인이 필요합니다</p>
+            <button className="login-btn" onClick={handleLoginClick}>로그인</button>
+          </div>
 
-          <section className="card menu">
-            <h3 className="menu-title">나의 쇼핑내역</h3>
-            <ul className="menu-list">
-              <li>
-                <a href="#">주문/배송 조회</a>
-              </li>
-              <li>
-                <a href="#">현금영수증/세금계산서</a>
-              </li>
+          <div className="card">
+            <h3>나의 쇼핑내역</h3>
+            <ul>
+              <li>주문/배송 조회</li>
+              <li>현금영수증/세금계산서</li>
             </ul>
-          </section>
+          </div>
 
-          <section className="card menu">
-            <h3 className="menu-title">관심목록</h3>
-            <ul className="menu-list">
-              <li>
-                <a href="#" className="link-strong">
-                  관심상품
-                </a>
-              </li>
+          <div className="card">
+            <h3>관심목록</h3>
+            <ul>
+              <li className="active">관심상품</li>
             </ul>
-          </section>
+          </div>
         </aside>
 
-        {/* 메인 콘텐츠 */}
-        <section className="content">
-          <h2 className="content-title">관심상품</h2>
+        {/* 오른쪽 콘텐츠 */}
+        <section className="favorites-content">
+          <h3 className="title">관심상품</h3>
+          <p className="count">관심상품 수 : <b>0</b></p>
 
-          {/* 리스트 헤더 & 테이블 */}
-          <div className="list-head">
-            <div>
-              관심상품 수 : <strong id="count">0</strong>
-            </div>
-          </div>
+          <table className="fav-table">
+            <thead>
+              <tr>
+                <th>이미지</th>
+                <th>상품명</th>
+                <th>금액</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan="3" className="empty">
+                  현재 저장된 관심상품이 없습니다.
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-          <div className="table">
-            <div className="table-head">
-              <div className="col col-img">이미지</div>
-              <div className="col col-name">상품명</div>
-              <div className="col col-price">금액</div>
-            </div>
-            <div className="table-body" id="listBody">
-              <div className="empty">현재 저장된 관심상품이 없습니다.</div>
-            </div>
-          </div>
+          <footer className="ptu-footer">© PTU InfoCom</footer>
         </section>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

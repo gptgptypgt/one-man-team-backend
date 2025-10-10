@@ -1,6 +1,6 @@
 import "./notebooks.css";
 
-const IMG_BASE = "/노트북"; // 이미지가 public/노트북 에 있을 때
+const IMG_BASE = "/laptops"; // 이미지가 public/노트북 에 있을 때
 
 const PRODUCTS = [
   // 삼성

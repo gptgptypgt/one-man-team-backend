@@ -23,7 +23,7 @@ export default function Header() {
         </form>
 
         <nav className="top-icons">
-          <a href="#" onClick={onLogin} aria-label="login">로그인</a>
+          <Link to="/login">로그인</Link>
           <a href="#" aria-label="cart">🛒</a>
           <a href="#" aria-label="favorite">⭐</a>
         </nav>

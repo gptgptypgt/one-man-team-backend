@@ -12,6 +12,7 @@ import AiQuote from './pages/AiQuote.jsx'
 import Misc from './pages/Misc.jsx'
 import Events from './pages/Events.jsx';
 import Notebooks from "./pages/Notebooks";
+import Login from "./pages/Login.jsx";
 
 const CATEGORIES = ['CPU', '그래픽카드', '메인보드', '파워']
 
@@ -66,6 +67,7 @@ export default function App() {
         <Route path="/misc" element={<Misc/>} />
         <Route path="/events" element={<Events />} />
         <Route path="/notebooks" element={<Notebooks />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <Footer />
     </>

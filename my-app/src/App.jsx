@@ -13,6 +13,8 @@ import Misc from './pages/Misc.jsx'
 import Events from './pages/Events.jsx';
 import Notebooks from "./pages/Notebooks";
 import Login from "./pages/Login.jsx";
+import Favorites from "./pages/Favorites";
+
 
 const CATEGORIES = ['CPU', '그래픽카드', '메인보드', '파워']
 
@@ -68,6 +70,7 @@ export default function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/notebooks" element={<Notebooks />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/favorites" element={<Favorites />} />
       </Routes>
       <Footer />
     </>

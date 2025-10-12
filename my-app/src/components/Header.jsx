@@ -24,7 +24,7 @@ export default function Header() {
 
         <nav className="top-icons">
           <Link to="/login">로그인</Link>
-          <a href="#" aria-label="cart">🛒</a>
+          <a href="/cart" aria-label="cart">🛒</a>
           <Link to="/favorites" aria-label="favorite">⭐</Link>
         </nav>
       </div>

@@ -7,7 +7,7 @@
   --wrap:1100px;
 }
 
-.notebooks .wrap{max-width:var(--wrap);margin:0 auto;padding:0 16px}
+.notebooks .wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
 
 /* 배너 */
 .notebooks .banner{background:#e8f5e9;color:var(--green);font-weight:700}

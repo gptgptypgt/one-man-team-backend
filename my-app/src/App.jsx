@@ -16,7 +16,9 @@ import Misc from "./pages/Misc.jsx";
 import Events from "./pages/Events.jsx";
 import Notebooks from "./pages/Notebooks";
 import Login from "./pages/Login.jsx";
+import Signup from "./components/signup.jsx";
 import Favorites from "./pages/Favorites";
+import Faq from "./pages/Faq.jsx";
 
 import "./App.css";
 
@@ -97,7 +99,9 @@ function Cart() {
 /* ---------------- App (라우팅) ---------------- */
 export default function App() {
   const location = useLocation();
-  const hideHeader = ["/favorites"].includes(location.pathname);
+
+  const hideHeader = ["/faq", "/favorites"].includes(location.pathname);
+  const hideMainComponents = ["/faq"].includes(location.pathname);
 
   return (
     <>
@@ -111,7 +115,9 @@ export default function App() {
         <Route path="/notebooks" element={<Notebooks />} />
         <Route path="/login" element={<Login />} />
         <Route path="/favorites" element={<Favorites />} />
-        <Route path="/cart" element={<Cart />} /> {/* ← 장바구니 라우트 */}
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/faq" element={<Faq />} />
       </Routes>
 
       <Footer />

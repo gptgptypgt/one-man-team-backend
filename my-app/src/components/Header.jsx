@@ -34,7 +34,7 @@ export default function Header() {
           <NavLink to="/ai"   className={({isActive})=>isActive?'active':undefined}>AI견적</NavLink>
           <NavLink to="/misc" className={({isActive})=>isActive?'active':undefined}>기타기기</NavLink>
           <NavLink to="/notebooks">노트북</NavLink>
-          <a href="#">FAQ</a>
+          <NavLink to="/faq">FAQ</NavLink>
           <NavLink to="/events" className={({isActive})=>isActive?'active':undefined}>이벤트</NavLink>
         </div>
       </nav>

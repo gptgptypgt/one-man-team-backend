@@ -16,6 +16,7 @@ import Misc from "./pages/Misc.jsx";
 import Events from "./pages/Events.jsx";
 import Notebooks from "./pages/Notebooks";
 import Login from "./pages/Login.jsx";
+import Signup from "./components/signup.jsx";
 import Favorites from "./pages/Favorites";
 
 import "./App.css";
@@ -112,6 +113,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/cart" element={<Cart />} /> {/* ← 장바구니 라우트 */}
+        <Route path="/signup" element={<Signup />} />
       </Routes>
 
       <Footer />

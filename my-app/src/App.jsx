@@ -14,11 +14,12 @@ import { SAMPLE_ROWS } from "./data.jsx";
 import AiQuote from "./pages/AiQuote.jsx";
 import Misc from "./pages/Misc.jsx";
 import Events from "./pages/Events.jsx";
-import Notebooks from "./pages/Notebooks";
+import Notebooks from "./pages/Notebooks.jsx";
 import Login from "./pages/Login.jsx";
-import Signup from "./components/signup.jsx";
-import Favorites from "./pages/Favorites";
+import Signup from "./pages/Signup.jsx"; // ✅ 회원가입 페이지 import
+import Favorites from "./pages/Favorites.jsx";
 import Faq from "./pages/Faq.jsx";
+import Cart from "./pages/Cart.jsx"; // ✅ 경로 대문자로 수정 (윈도우는 구분 안 해도 되지만 통일)
 
 import "./App.css";
 
@@ -35,7 +36,6 @@ function Home() {
       <CardRow />
 
       <main className="wrap layout">
-        {/* 왼쪽 카테고리 */}
         <aside className="side-nav">
           <h4>부품 선택</h4>
           {CATEGORIES.map((c) => (
@@ -49,18 +49,20 @@ function Home() {
           ))}
         </aside>
 
-        {/* 가운데 콘텐츠 */}
         <section className="content">
           <form className="hero-search" onSubmit={(e) => e.preventDefault()}>
             <input type="search" placeholder="상품명을 검색하세요." />
             <button>검색</button>
           </form>
 
-          <ProductInfo title={category} totalText="상품수: " totalCount="11,689개" />
+          <ProductInfo
+            title={category}
+            totalText="상품수: "
+            totalCount="11,689개"
+          />
           <ProductList rows={rows} />
         </section>
 
-        {/* 오른쪽 필터 */}
         <aside className="side-filter" id="sideFilter">
           <SideFilter category={category} />
         </aside>
@@ -69,54 +71,49 @@ function Home() {
   );
 }
 
-/* ---------------- Cart (장바구니) ---------------- */
-function Cart() {
-  return (
-    <section className="cart-summary">
-      <h1 className="page-title">장바구니</h1>
-
-      <div className="summary-box">
-        <h2>총 결제금액</h2>
-        <p>
-          선택상품 금액 <strong>0원</strong>
-        </p>
-        <p>
-          배송비 <strong>(+) 0원</strong>
-        </p>
-        <p className="total">
-          <strong>0원</strong>
-        </p>
-      </div>
-
-      <div className="buttons">
-        <button type="button" className="btn-order">주문하기</button>
-        <button type="button" className="btn-continue">쇼핑 계속하기</button>
-      </div>
-    </section>
-  );
-}
-
-/* ---------------- App (라우팅) ---------------- */
+/* ---------------- App (라우팅 + 장바구니 상태) ---------------- */
 export default function App() {
   const location = useLocation();
 
+  // ✅ 장바구니 상태
+  const [cartItems, setCartItems] = useState([]);
+
+  // ✅ 장바구니 추가 함수
+  function handleAddToCart(product) {
+    setCartItems((prev) => {
+      const existing = prev.find((item) => item.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
+        );
+      }
+      return [...prev, { ...product, qty: 1 }];
+    });
+  }
+
+  // ✅ 특정 페이지에서는 헤더 숨기기
   const hideHeader = ["/faq", "/favorites"].includes(location.pathname);
-  const hideMainComponents = ["/faq"].includes(location.pathname);
 
   return (
     <>
-      {!hideHeader && <Header />}
+      {!hideHeader && <Header cartCount={cartItems.length} />}
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/ai" element={<AiQuote />} />
-        <Route path="/misc" element={<Misc />} />
+        <Route
+          path="/misc"
+          element={<Misc onAddToCart={handleAddToCart} />}
+        />
+        <Route
+          path="/notebooks"
+          element={<Notebooks onAddToCart={handleAddToCart} />}
+        />
         <Route path="/events" element={<Events />} />
-        <Route path="/notebooks" element={<Notebooks />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} /> {/* ✅ 회원가입 라우트 추가 */}
         <Route path="/favorites" element={<Favorites />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/cart" element={<Cart cartItems={cartItems} />} />
         <Route path="/faq" element={<Faq />} />
       </Routes>
 

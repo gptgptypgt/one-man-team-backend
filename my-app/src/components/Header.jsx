@@ -1,15 +1,12 @@
+// Header.jsx
 import { Link, NavLink } from 'react-router-dom'
 
-export default function Header() {
+export default function Header({ cartCount = 0 }) { // ✅ cartCount props 추가
   const onSearch = (e) => {
     e.preventDefault()
     const keyword = e.currentTarget.querySelector('input')?.value?.trim()
     if (keyword) alert(`"${keyword}" 를 검색합니다 🔍`)
     else alert('검색어를 입력하세요!')
-  }
-  const onLogin = (e) => {
-    e.preventDefault()
-    alert('로그인 창을 띄우는 기능을 여기에 구현하세요 👤')
   }
 
   return (
@@ -24,7 +21,10 @@ export default function Header() {
 
         <nav className="top-icons">
           <Link to="/login">로그인</Link>
-          <a href="/cart" aria-label="cart">🛒</a>
+          {/* ✅ 장바구니 개수 표시 */}
+          <Link to="/cart" aria-label="cart">
+            🛒 {cartCount > 0 && <span>({cartCount})</span>}
+          </Link>
           <Link to="/favorites" aria-label="favorite">⭐</Link>
         </nav>
       </div>

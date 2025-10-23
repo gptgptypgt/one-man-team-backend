@@ -1,8 +1,8 @@
+// Notebooks.jsx
 import "./notebooks.css";
 
-const IMG_BASE = "/laptops"; // 이미지가 public/노트북 에 있을 때
-
-const PRODUCTS = [
+const IMG_BASE = "/laptops";
+const PRODUCTS = [ 
   // 삼성
   { id:1,  img:"갤럭시_flex.png", alt:"노트북1",
     spec1:"39.6cm / 1.55kg", spec2:"코어i7 / 54Wh 배터리",
@@ -45,18 +45,16 @@ const PRODUCTS = [
     name:"ASUS Gaming V16 V3607VM-RP005 (SSD 512GB)", price:"1,399,000원" },
   { id:12, img:"asus_p1.png", alt:"노트북12",
     spec1:"39.62cm / 1.64kg", spec2:"코어i5 / 65Wh",
-    name:"ASUS ExpertBook P1 P1503CVA-S70532 (SSD 512GB)", price:"699,000원" },
-];
+    name:"ASUS ExpertBook P1 P1503CVA-S70532 (SSD 512GB)", price:"699,000원" }, ];
 
 const onImgError = (e) => {
-  e.currentTarget.src = `${IMG_BASE}/placeholder.png`; // 선택: public/노트북/placeholder.png 있으면 사용
+  e.currentTarget.src = `${IMG_BASE}/placeholder.png`;
   e.currentTarget.classList.add("img-fallback");
 };
 
-export default function Notebooks() {
+export default function Notebooks({ onAddToCart }) { // ✅ props 추가
   return (
     <div className="notebooks">
-      {/* 배너(원하면 빼도 됨) */}
       <section className="banner">
         <div className="wrap">정보통신학과 파이팅 💪</div>
       </section>
@@ -72,17 +70,11 @@ export default function Notebooks() {
                 onError={onImgError}
               />
               <div className="product-info">
-                <h3>
-                  {p.spec1}<br />{p.spec2}
-                </h3>
+                <h3>{p.spec1}<br />{p.spec2}</h3>
                 <p>{p.name}</p>
                 <div className="price">{p.price}</div>
-                <button
-                  className="buy-btn"
-                  onClick={() => alert(`데모: "${p.name}" 구매 기능은 준비중입니다.`)}
-                >
-                  구매하기
-                </button>
+                {/* ✅ 구매하기 → 장바구니 담기 */}
+                <button className="buy-btn" onClick={() => onAddToCart(p)}>🛒 구매하기</button>
               </div>
             </div>
           ))}

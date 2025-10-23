@@ -1,7 +1,9 @@
+// Misc.jsx
 import Banner from '../components/Banner.jsx'
-import './misc.css'            // 아래 2번 CSS
+import './misc.css'
+
 const IMG_BASE = "/misc"
-const PRODUCTS = [
+const PRODUCTS = [ 
   // 모니터
   {
     id: 1,
@@ -88,14 +90,9 @@ const PRODUCTS = [
     spec1: '유선+무선 / 42000DPI', spec2: '가속도50G / 5버튼',
     name: 'ATK A9 ULTRA 유무선 브라보텍',
     price: '88,000원',
-  },
-]
+  }, ]
 
-export default function Misc() {
-  const onBuy = (name) => {
-    alert(`"${name}" 구매하기(데모)`)
-  }
-
+export default function Misc({ onAddToCart }) { // ✅ props 추가
   return (
     <>
       <Banner>정보통신학과 파이팅 💪</Banner>
@@ -109,7 +106,8 @@ export default function Misc() {
                 <h3>{p.spec1}<br />{p.spec2}</h3>
                 <p>{p.name}</p>
                 <div className="price">{p.price}</div>
-                <button className="buy-btn" onClick={() => onBuy(p.name)}>구매하기</button>
+                {/* ✅ 구매하기 → 장바구니 담기 */}
+                <button className="buy-btn" onClick={() => onAddToCart(p)}>🛒 구매하기</button>
               </div>
             </div>
           ))}

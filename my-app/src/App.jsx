@@ -14,12 +14,12 @@ import { SAMPLE_ROWS } from "./data.jsx";
 import AiQuote from "./pages/AiQuote.jsx";
 import Misc from "./pages/Misc.jsx";
 import Events from "./pages/Events.jsx";
-import Notebooks from "./pages/Notebooks";
+import Notebooks from "./pages/Notebooks.jsx";
 import Login from "./pages/Login.jsx";
-import Signup from "./pages/Signup.jsx"; // ✅ 수정: components → pages로 경로 변경
-import Favorites from "./pages/Favorites";
+import Signup from "./pages/Signup.jsx"; // ✅ 회원가입 페이지 import
+import Favorites from "./pages/Favorites.jsx";
 import Faq from "./pages/Faq.jsx";
-import Cart from "./pages/cart.jsx";
+import Cart from "./pages/Cart.jsx"; // ✅ 경로 대문자로 수정 (윈도우는 구분 안 해도 되지만 통일)
 
 import "./App.css";
 
@@ -91,6 +91,7 @@ export default function App() {
     });
   }
 
+  // ✅ 특정 페이지에서는 헤더 숨기기
   const hideHeader = ["/faq", "/favorites"].includes(location.pathname);
 
   return (
@@ -110,7 +111,7 @@ export default function App() {
         />
         <Route path="/events" element={<Events />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} /> {/* ✅ 회원가입 페이지 연결 */}
+        <Route path="/signup" element={<Signup />} /> {/* ✅ 회원가입 라우트 추가 */}
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} />} />
         <Route path="/faq" element={<Faq />} />

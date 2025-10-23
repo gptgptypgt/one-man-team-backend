@@ -1,109 +1,31 @@
-// src/pages/Signup.jsx
-import { useState } from "react";
-import axios from "axios";
-import "../ai.css"; // ✅ 기존 PTU 스타일 공통 CSS (배경/폰트 등)
+import axios from "axios"
+import { useState } from "react"
 
 export default function Signup() {
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
-    email: "",
-  });
+  const [form, setForm] = useState({ username: "", password: "", email: "" })
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      await axios.post("http://localhost:8080/api/member/register", form);
-      alert("회원가입이 완료되었습니다!");
-      setForm({ username: "", password: "", email: "" });
+      const res = await axios.post("http://localhost:8080/api/member/register", form)
+      alert(res.data) // 백엔드가 보낸 메시지 출력
     } catch (err) {
-      console.error(err);
-      alert("회원가입 실패 😢");
+      alert("회원가입 실패 ❌ 콘솔을 확인하세요.")
+      console.error(err)
     }
-  };
+  }
 
   return (
-    <div className="wrap" style={{ maxWidth: 500, margin: "60px auto" }}>
-      <h1 style={{ color: "var(--green)", textAlign: "center", fontWeight: "900" }}>
-        회원가입
-      </h1>
-
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          marginTop: "30px",
-        }}
-      >
-        <label style={{ fontWeight: 600 }}>아이디</label>
-        <input
-          type="text"
-          name="username"
-          value={form.username}
-          onChange={handleChange}
-          placeholder="아이디를 입력하세요"
-          required
-          style={{
-            padding: "10px",
-            borderRadius: "8px",
-            border: "1px solid var(--line)",
-          }}
-        />
-
-        <label style={{ fontWeight: 600 }}>비밀번호</label>
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          placeholder="비밀번호를 입력하세요"
-          required
-          style={{
-            padding: "10px",
-            borderRadius: "8px",
-            border: "1px solid var(--line)",
-          }}
-        />
-
-        <label style={{ fontWeight: 600 }}>이메일</label>
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="이메일을 입력하세요"
-          required
-          style={{
-            padding: "10px",
-            borderRadius: "8px",
-            border: "1px solid var(--line)",
-          }}
-        />
-
-        <button
-          type="submit"
-          style={{
-            marginTop: "20px",
-            padding: "12px",
-            borderRadius: "8px",
-            background: "var(--green)",
-            color: "#fff",
-            fontWeight: "700",
-            fontSize: "16px",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          회원가입 완료
-        </button>
-      </form>
-    </div>
-  );
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "8px", width: "300px", margin: "0 auto" }}>
+      <h2>회원가입</h2>
+      <input name="username" placeholder="아이디" onChange={handleChange} />
+      <input name="password" placeholder="비밀번호" type="password" onChange={handleChange} />
+      <input name="email" placeholder="이메일" onChange={handleChange} />
+      <button type="submit">회원가입</button>
+    </form>
+  )
 }

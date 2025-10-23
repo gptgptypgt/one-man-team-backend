@@ -16,10 +16,10 @@ import Misc from "./pages/Misc.jsx";
 import Events from "./pages/Events.jsx";
 import Notebooks from "./pages/Notebooks";
 import Login from "./pages/Login.jsx";
-import Signup from "./components/signup.jsx";
+import Signup from "./pages/Signup.jsx"; // ✅ 수정: components → pages로 경로 변경
 import Favorites from "./pages/Favorites";
 import Faq from "./pages/Faq.jsx";
-import Cart from "./pages/cart.jsx"; // ✅ 이미 있던 import 그대로 유지
+import Cart from "./pages/cart.jsx";
 
 import "./App.css";
 
@@ -55,7 +55,11 @@ function Home() {
             <button>검색</button>
           </form>
 
-          <ProductInfo title={category} totalText="상품수: " totalCount="11,689개" />
+          <ProductInfo
+            title={category}
+            totalText="상품수: "
+            totalCount="11,689개"
+          />
           <ProductList rows={rows} />
         </section>
 
@@ -71,7 +75,7 @@ function Home() {
 export default function App() {
   const location = useLocation();
 
-  // ✅ 장바구니 상태 추가
+  // ✅ 장바구니 상태
   const [cartItems, setCartItems] = useState([]);
 
   // ✅ 장바구니 추가 함수
@@ -96,14 +100,19 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/ai" element={<AiQuote />} />
-        {/* ✅ 장바구니 추가 함수 전달 */}
-        <Route path="/misc" element={<Misc onAddToCart={handleAddToCart} />} />
-        <Route path="/notebooks" element={<Notebooks onAddToCart={handleAddToCart} />} />
+        <Route
+          path="/misc"
+          element={<Misc onAddToCart={handleAddToCart} />}
+        />
+        <Route
+          path="/notebooks"
+          element={<Notebooks onAddToCart={handleAddToCart} />}
+        />
         <Route path="/events" element={<Events />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} /> {/* ✅ 회원가입 페이지 연결 */}
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="/faq" element={<Faq />} />
       </Routes>
 

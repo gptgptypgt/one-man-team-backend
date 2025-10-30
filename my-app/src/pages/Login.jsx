@@ -1,11 +1,14 @@
+// ✅ Login.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ 추가
+import { useNavigate } from "react-router-dom";
+import "../login.css"; // 스타일 파일 연결
 
 export default function Login() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // ✅ 네비게이터 훅 사용
+  const navigate = useNavigate();
 
+  // ✅ 로그인 요청 함수
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -20,7 +23,7 @@ export default function Login() {
 
       if (res.ok) {
         alert("로그인 성공!");
-        navigate("/"); // ✅ 메인 페이지로 이동
+        navigate("/"); // 메인 페이지로 이동
       } else {
         alert("로그인 실패: " + data);
       }
@@ -34,6 +37,7 @@ export default function Login() {
     <main className="page">
       <section className="card" role="dialog" aria-label="PTU 로그인">
         <h1 className="logo">PTU</h1>
+
         <form onSubmit={handleSubmit}>
           <div className="row">
             <input
@@ -55,10 +59,29 @@ export default function Login() {
             />
           </div>
 
+          <div className="options">
+            <label>
+              <input type="checkbox" /> 로그인 상태 유지
+            </label>
+          </div>
+
           <button type="submit" className="login-btn">
             로그인
           </button>
         </form>
+
+        <div className="links">
+          {/* ✅ 회원가입 페이지로 이동 */}
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/signup");
+            }}
+          >
+            회원가입
+          </a>
+        </div>
       </section>
     </main>
   );

@@ -10,7 +10,6 @@ import ProductInfo from "./components/ProductInfo.jsx";
 import ProductList from "./components/ProductList.jsx";
 import SideFilter from "./components/SideFilter.jsx";
 
-import { SAMPLE_ROWS } from "./data.jsx";
 import AiQuote from "./pages/AiQuote.jsx";
 import Misc from "./pages/Misc.jsx";
 import Events from "./pages/Events.jsx";
@@ -25,9 +24,53 @@ import "./App.css";
 
 const CATEGORIES = ["CPU", "그래픽카드", "메인보드", "파워"];
 
+/* ---------------- Home ---------------- */
 function Home() {
   const [category, setCategory] = useState("CPU");
-  const rows = useMemo(() => SAMPLE_ROWS[category] ?? [], [category]);
+  const [filters, setFilters] = useState({});
+  const [serverRows, setServerRows] = useState([]);
+
+  // ✅ 서버에서 데이터 불러오기
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.append("category", category);
+
+    // ✅ 카테고리별 필터 값 전달
+    if (category === "CPU") {
+      if (filters.brand?.length === 1) params.append("brand", filters.brand[0]);
+      if (filters.core?.length === 1) params.append("cores", filters.core[0]);
+    }
+
+    if (category === "그래픽카드") {
+      if (filters.vendor?.length === 1)
+        params.append("vendor", filters.vendor[0]);
+      if (filters.vram?.length === 1) params.append("vram", filters.vram[0]);
+    }
+
+    if (category === "메인보드") {
+      if (filters.socket?.length === 1)
+        params.append("socket", filters.socket[0]);
+      if (filters.form?.length === 1) params.append("form", filters.form[0]);
+    }
+
+    if (category === "파워") {
+      if (filters.watt?.length === 1) params.append("watt", filters.watt[0]);
+      if (filters.cable?.length === 1)
+        params.append("cable", filters.cable[0]);
+    }
+
+    // ✅ API 호출
+    fetch(`http://localhost:8080/api/products?${params.toString()}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("서버 응답 오류");
+        return res.json();
+      })
+      .then((data) => {
+        console.log("서버에서 받아온 데이터:", data);
+        setServerRows(data);
+      })
+      .catch((err) => console.error("불러오기 오류:", err));
+  }, [category, filters]);
 
   return (
     <>
@@ -35,6 +78,7 @@ function Home() {
       <CardRow />
 
       <main className="wrap layout">
+        {/* ✅ 왼쪽 부품 카테고리 */}
         <aside className="side-nav">
           <h4>부품 선택</h4>
           {CATEGORIES.map((c) => (
@@ -48,18 +92,24 @@ function Home() {
           ))}
         </aside>
 
+        {/* ✅ 가운데 상품 리스트 */}
         <section className="content">
           <form className="hero-search" onSubmit={(e) => e.preventDefault()}>
             <input type="search" placeholder="상품명을 검색하세요." />
             <button>검색</button>
           </form>
 
-          <ProductInfo title={category} totalText="상품수: " totalCount="11,689개" />
-          <ProductList rows={rows} />
+          <ProductInfo
+            title={category}
+            totalText="상품수: "
+            totalCount={`${serverRows.length}개`}
+          />
+          <ProductList rows={serverRows} />
         </section>
 
+        {/* ✅ 오른쪽 필터 */}
         <aside className="side-filter" id="sideFilter">
-          <SideFilter category={category} />
+          <SideFilter category={category} onFilterChange={setFilters} />
         </aside>
       </main>
     </>
@@ -69,21 +119,17 @@ function Home() {
 /* ---------------- App ---------------- */
 export default function App() {
   const location = useLocation();
-
   const [cartItems, setCartItems] = useState([]);
 
-  /* ✅ 1. 로컬스토리지에서 장바구니 복원 */
   useEffect(() => {
     const saved = localStorage.getItem("cartItems");
     if (saved) setCartItems(JSON.parse(saved));
   }, []);
 
-  /* ✅ 2. cartItems 변경 시 저장 */
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  /* ✅ 3. 상품 추가 */
   function handleAddToCart(product, category) {
     const uniqueId = `${category}-${product.id}`;
     setCartItems((prev) => {
@@ -97,12 +143,10 @@ export default function App() {
     });
   }
 
-  /* ✅ 4. 상품 삭제 */
   function handleRemoveFromCart(productId) {
     setCartItems((prev) => prev.filter((item) => item.id !== productId));
   }
 
-  /* ✅ 5. 수량 조정 */
   function handleUpdateQty(productId, delta) {
     setCartItems((prev) =>
       prev.map((item) =>
@@ -113,7 +157,6 @@ export default function App() {
     );
   }
 
-  /* ✅ 6. 전체 비우기 */
   function handleClearCart() {
     if (window.confirm("장바구니를 모두 비우시겠습니까?")) {
       setCartItems([]);
@@ -135,7 +178,9 @@ export default function App() {
         />
         <Route
           path="/notebooks"
-          element={<Notebooks onAddToCart={(p) => handleAddToCart(p, "notebook")} />}
+          element={
+            <Notebooks onAddToCart={(p) => handleAddToCart(p, "notebook")} />
+          }
         />
         <Route
           path="/cart"

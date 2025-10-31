@@ -22,8 +22,16 @@ export default function Login() {
       const data = await res.text();
 
       if (res.ok) {
-        alert("로그인 성공!");
-        navigate("/"); // 메인 페이지로 이동
+  // ✅ 로그인 상태 저장
+  localStorage.setItem("isLoggedIn", "true");
+
+  alert("로그인 성공!");
+
+  // ✅ 새로고침으로 Header 상태 갱신
+  navigate("/");
+  window.location.reload();  // ← 이 한 줄 추가 !!!
+
+
       } else {
         alert("로그인 실패: " + data);
       }

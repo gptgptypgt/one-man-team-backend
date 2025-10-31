@@ -25,7 +25,7 @@ export default function Header({ cartCount = 0 }) { // ✅ cartCount props 추�
           <Link to="/cart" aria-label="cart">
             🛒 {cartCount > 0 && <span>({cartCount})</span>}
           </Link>
-          <Link to="/favorites" aria-label="favorite">⭐</Link>
+          <Link to="/favorites" aria-label="favorite"></Link>
         </nav>
       </div>
 

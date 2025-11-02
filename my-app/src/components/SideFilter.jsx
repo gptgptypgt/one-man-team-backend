@@ -1,8 +1,10 @@
+// ✅ src/components/SideFilter.jsx
 import { useState, useEffect } from "react";
 
 export default function SideFilter({ category, onFilterChange }) {
   const [selectedFilters, setSelectedFilters] = useState({});
 
+  // ✅ 체크박스 클릭 시 필터 상태 갱신
   const handleChange = (group, value, checked) => {
     setSelectedFilters((prev) => {
       const groupValues = new Set(prev[group] || []);
@@ -12,17 +14,26 @@ export default function SideFilter({ category, onFilterChange }) {
     });
   };
 
+  // ✅ 필터 상태가 바뀔 때마다 부모(App.jsx)로 전달
   useEffect(() => {
     onFilterChange(selectedFilters);
   }, [selectedFilters]);
 
-  // ✅ 카테고리별 필터 항목 구성
+  // ✅ 카테고리 바뀔 때 기존 필터 초기화
+  useEffect(() => {
+    setSelectedFilters({});
+  }, [category]);
+
+  // ✅ 카테고리별 필터 그룹 구성
   const renderFilterGroups = () => {
     switch (category) {
+      /* ---------------- CPU ---------------- */
       case "CPU":
         return (
           <>
             <h4>옵션 선택</h4>
+
+            {/* ✅ 제조사 */}
             <div className="filter-group">
               <h5>제조사</h5>
               <div className="grid">
@@ -30,9 +41,8 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={b}>
                     <input
                       type="checkbox"
-                      onChange={(e) =>
-                        handleChange("brand", b, e.target.checked)
-                      }
+                      checked={selectedFilters.brand?.includes(b) || false}
+                      onChange={(e) => handleChange("brand", b, e.target.checked)}
                     />
                     {b}
                   </label>
@@ -40,6 +50,7 @@ export default function SideFilter({ category, onFilterChange }) {
               </div>
             </div>
 
+            {/* ✅ 코어 수 */}
             <div className="filter-group">
               <h5>코어 수</h5>
               <div className="grid">
@@ -47,11 +58,27 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={c}>
                     <input
                       type="checkbox"
-                      onChange={(e) =>
-                        handleChange("core", c, e.target.checked)
-                      }
+                      checked={selectedFilters.core?.includes(c) || false}
+                      onChange={(e) => handleChange("core", c, e.target.checked)}
                     />
                     {c}코어
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* ✅ 세대 필터 추가 */}
+            <div className="filter-group">
+              <h5>세대</h5>
+              <div className="grid">
+                {["10세대", "11세대", "12세대", "13세대", "14세대", "Ryzen 5000", "Ryzen 7000"].map((g) => (
+                  <label key={g}>
+                    <input
+                      type="checkbox"
+                      checked={selectedFilters.gener?.includes(g) || false}
+                      onChange={(e) => handleChange("gener", g, e.target.checked)}
+                    />
+                    {g}
                   </label>
                 ))}
               </div>
@@ -59,10 +86,12 @@ export default function SideFilter({ category, onFilterChange }) {
           </>
         );
 
+      /* ---------------- 그래픽카드 ---------------- */
       case "그래픽카드":
         return (
           <>
             <h4>옵션 선택</h4>
+
             <div className="filter-group">
               <h5>칩셋 제조사</h5>
               <div className="grid">
@@ -70,6 +99,7 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={v}>
                     <input
                       type="checkbox"
+                      checked={selectedFilters.vendor?.includes(v) || false}
                       onChange={(e) =>
                         handleChange("vendor", v, e.target.checked)
                       }
@@ -87,6 +117,7 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={v}>
                     <input
                       type="checkbox"
+                      checked={selectedFilters.vram?.includes(v) || false}
                       onChange={(e) =>
                         handleChange("vram", v, e.target.checked)
                       }
@@ -99,10 +130,12 @@ export default function SideFilter({ category, onFilterChange }) {
           </>
         );
 
+      /* ---------------- 메인보드 ---------------- */
       case "메인보드":
         return (
           <>
             <h4>옵션 선택</h4>
+
             <div className="filter-group">
               <h5>소켓 규격</h5>
               <div className="grid">
@@ -110,6 +143,7 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={s}>
                     <input
                       type="checkbox"
+                      checked={selectedFilters.socket?.includes(s) || false}
                       onChange={(e) =>
                         handleChange("socket", s, e.target.checked)
                       }
@@ -127,6 +161,7 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={f}>
                     <input
                       type="checkbox"
+                      checked={selectedFilters.form?.includes(f) || false}
                       onChange={(e) =>
                         handleChange("form", f, e.target.checked)
                       }
@@ -139,10 +174,12 @@ export default function SideFilter({ category, onFilterChange }) {
           </>
         );
 
+      /* ---------------- 파워 ---------------- */
       case "파워":
         return (
           <>
             <h4>옵션 선택</h4>
+
             <div className="filter-group">
               <h5>정격 출력</h5>
               <div className="grid">
@@ -150,9 +187,8 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={w}>
                     <input
                       type="checkbox"
-                      onChange={(e) =>
-                        handleChange("watt", w, e.target.checked)
-                      }
+                      checked={selectedFilters.watt?.includes(w) || false}
+                      onChange={(e) => handleChange("watt", w, e.target.checked)}
                     />
                     {w}W
                   </label>
@@ -167,6 +203,7 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={c}>
                     <input
                       type="checkbox"
+                      checked={selectedFilters.cable?.includes(c) || false}
                       onChange={(e) =>
                         handleChange("cable", c, e.target.checked)
                       }
@@ -179,6 +216,7 @@ export default function SideFilter({ category, onFilterChange }) {
           </>
         );
 
+      /* ---------------- 기본 ---------------- */
       default:
         return <p>필터를 선택하세요</p>;
     }

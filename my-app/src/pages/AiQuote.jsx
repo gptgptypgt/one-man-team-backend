@@ -26,16 +26,14 @@ export default function AiQuote() {
   async function ask(q) {
     const typingId = appendTyping()
     try {
-      const res = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q }),
+      // ✅ 백엔드: GET /api/ai/recommend?input=... (문자열 반환)
+      const res = await fetch(`/api/ai/recommend?input=${encodeURIComponent(q)}`, {
+        method: 'GET'
       })
 
       let answerText
       if (res.ok) {
-        const data = await res.json()
-        answerText = data?.answer || '응답이 없어요.'
+        answerText = (await res.text())?.trim() || '응답이 없어요.'
       } else {
         answerText = '데모 응답: 백엔드가 아직 연결되지 않았습니다.'
       }

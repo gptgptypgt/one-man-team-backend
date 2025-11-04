@@ -25,49 +25,26 @@ import "./App.css";
 const CATEGORIES = ["CPU", "그래픽카드", "메인보드", "파워"];
 
 function Home() {
-  const [category, setCategory] = useState("메인보드");
+  const [category, setCategory] = useState("CPU");
   const [filters, setFilters] = useState({});
   const [serverRows, setServerRows] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  // ✅ 필터, 검색어, 카테고리 변경 시마다 서버에 자동 요청
   useEffect(() => {
     const params = new URLSearchParams();
     params.append("category", category);
 
-    // ✅ 검색어 추가
     if (searchText.trim()) params.append("search", searchText);
 
-    // ✅ 카테고리별 필터 처리
-    if (category === "CPU") {
-      if (filters.brand?.length === 1)
-        params.append("brand", filters.brand[0]);
-      if (filters.core?.length === 1)
-        params.append("cores", filters.core[0]);
-      if (filters.gener?.length === 1)
-        params.append("gener", filters.gener[0]);
-    }
+    // ✅ 공통 필터 처리 (각 필터 키에 대해 배열 -> 문자열 변환)
+    Object.entries(filters).forEach(([key, values]) => {
+      if (values && values.length > 0) {
+        params.append(key, values.join(","));
+      }
+    });
 
-    if (category === "그래픽카드") {
-      if (filters.vendor?.length === 1)
-        params.append("vendor", filters.vendor[0]);
-      if (filters.vram?.length === 1)
-        params.append("vram", filters.vram[0]);
-    }
-
-    if (category === "메인보드") {
-      if (filters.socket?.length === 1)
-        params.append("socket", filters.socket[0]);
-      if (filters.form?.length === 1)
-        params.append("form", filters.form[0]);
-    }
-
-    if (category === "파워") {
-      if (filters.watt?.length === 1)
-        params.append("watt", filters.watt[0]);
-      if (filters.cable?.length === 1)
-        params.append("cable", filters.cable[0]);
-    }
-
+    // ✅ 요청 URL
     const url = `http://localhost:8080/api/products?${params.toString()}`;
     console.log("요청 URL:", url);
 
@@ -77,7 +54,7 @@ function Home() {
         console.log("✅ 받아온 데이터:", data);
         setServerRows(Array.isArray(data) ? data : []);
       })
-      .catch((err) => console.error("❌ 오류:", err));
+      .catch((err) => console.error("❌ 상품 로딩 오류:", err));
   }, [category, filters, searchText]);
 
   return (
@@ -85,6 +62,7 @@ function Home() {
       <Banner>정보통신학과 파이팅 💪</Banner>
       <CardRow />
       <main className="wrap layout">
+        {/* 왼쪽 카테고리 선택 */}
         <aside className="side-nav">
           <h4>부품 선택</h4>
           {CATEGORIES.map((c) => (
@@ -98,6 +76,7 @@ function Home() {
           ))}
         </aside>
 
+        {/* 중앙: 검색 + 상품 목록 */}
         <section className="content">
           <form
             className="hero-search"
@@ -118,6 +97,7 @@ function Home() {
           <ProductList rows={serverRows} />
         </section>
 
+        {/* 오른쪽 필터 */}
         <aside className="side-filter" id="sideFilter">
           <SideFilter category={category} onFilterChange={setFilters} />
         </aside>

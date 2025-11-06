@@ -32,7 +32,7 @@ export default function ProductList({ rows = [] }) {
                 <p>코어 수: {p.cpu_cores || "정보 없음"}</p>
                 <p>쓰레드 수: {p.cpu_thread || "정보 없음"}</p>
                 <p>세대: {p.cpu_gener || "정보 없음"}</p>
-                <p>소켓 수: {p.cpu_socke || "정보 없음"}</p>
+                <p>소켓 수: {p.cpu_socket || "정보 없음"}</p>
                 <p>가격: {p.cpu_price || "정보 없음"}</p>
               </>
             )}

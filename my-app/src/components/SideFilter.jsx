@@ -55,13 +55,12 @@ case "CPU":
         <h5>세대</h5>
         <div className="grid">
           {[
-            "10세대",
-            "11세대",
+            "2세대",
+            "4세대",
+            "5세대",
+            "6세대",
             "12세대",
-            "13세대",
-            "14세대",
-            "Ryzen 5000",
-            "Ryzen 7000",
+            "14세대"
           ].map((g) => (
             <label key={g}>
               <input
@@ -141,8 +140,7 @@ case "그래픽카드":
         <h5>제조사</h5>
         <div className="grid">
           {[
-            "NVIDIA", "AMD", "INNO3D", "ASUS", "MSI",
-            "GIGABYTE", "ZOTAC", "COLORFUL", "PALIT"
+            "NVIDIA", "AMD"
           ].map((v) => (
             <label key={v}>
               <input
@@ -160,7 +158,7 @@ case "그래픽카드":
       <div className="filter-group">
         <h5>VRAM 용량</h5>
         <div className="grid">
-          {["24GB", "20GB", "16GB", "12GB", "10GB", "8GB", "6GB", "4GB"].map((v) => (
+          {["32GB", "16GB", "12GB", "8GB", "6GB"].map((v) => (
             <label key={v}>
               <input
                 type="checkbox"

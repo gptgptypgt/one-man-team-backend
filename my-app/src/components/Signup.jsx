@@ -3,44 +3,52 @@ import "./../login.css";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    userId: "",
-    name: "",
+    id: "",          // DB의 PK (varchar 16)
     password: "",
     confirmPassword: "",
-    studentId: ""
+    email: "",
+    studentid: "",
   });
 
-  // 입력값 변경
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 폼 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
+      alert("❌ 비밀번호가 일치하지 않습니다.");
       return;
     }
 
     try {
-      const res = await fetch("/api/signup", {
+      // 프록시 사용을 권장 (절대경로 대신 상대경로)
+      const res = await fetch("/api/member/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          id: formData.id,
+          password: formData.password,
+          email: formData.email,
+          studentid: formData.studentid,
+        }),
       });
 
-      if (res.ok) {
-        alert("회원가입이 완료되었습니다!");
-        window.location.href = "/login";
-      } else {
-        alert("회원가입 실패. 다시 시도해주세요.");
+      // ▼▼ 추가된 부분: 실패 시 서버 메시지 그대로 표시 ▼▼
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        alert(data.message || `❌ 회원가입 실패 (HTTP ${res.status})`);
+        return;
       }
+      // ▲▲ 추가 끝 ▲▲
+
+      alert("✅ 회원가입이 완료되었습니다!");
+      window.location.href = "/login";
     } catch (err) {
       console.error(err);
-      alert("서버 오류가 발생했습니다.");
+      alert("⚠️ 서버 오류가 발생했습니다.");
     }
   };
 
@@ -54,21 +62,22 @@ const Signup = () => {
           <div className="row">
             <input
               type="text"
-              name="userId"
-              placeholder="아이디"
-              value={formData.userId}
+              name="id"
+              placeholder="아이디 (최대 16자)"
+              value={formData.id}
               onChange={handleChange}
               required
+              maxLength={16}
             />
           </div>
 
-          {/* 이름 */}
+          {/* 이메일 */}
           <div className="row">
             <input
-              type="text"
-              name="name"
-              placeholder="이름"
-              value={formData.name}
+              type="email"
+              name="email"
+              placeholder="이메일"
+              value={formData.email}
               onChange={handleChange}
               required
             />
@@ -102,11 +111,12 @@ const Signup = () => {
           <div className="row">
             <input
               type="text"
-              name="studentId"
+              name="studentid"
               placeholder="학번 (예: 20231234)"
-              value={formData.studentId}
+              value={formData.studentid}
               onChange={handleChange}
               required
+              maxLength={10}
             />
           </div>
 

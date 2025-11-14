@@ -19,14 +19,14 @@ html,body{margin:0;font-family:Inter,"Noto Sans KR",system-ui,Segoe UI,Roboto,He
 .hero-title{margin:8px 0 6px;font-size:45px;line-height:1.2;font-weight:900;letter-spacing:-0.5px}
 .hero-title span{color:var(--green)}
 .hero-sub{margin:0 auto 24px;color:#6b7280;font-size:18px}
-.ask{width:900px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:18px 18px 18px 22px;background:#eef2f5;border-radius:28px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.ask{width:900px;margin: 24px auto 0;display:flex;align-items:center;gap:18px;padding:18px 18px 18px 22px;background:#eef2f5;border-radius:28px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
 .ask input{flex:1;border:0;background:transparent;font-size:16px;outline:none;color:#111}
 .ask input::placeholder{color:#9aa3af}
 .ask button{width:44px;height:44px;border-radius:50%;border:0;background:#6ea8fe;color:#fff;font-size:18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(110,168,254,.35);transition:transform .08s ease, filter .15s ease}
 .ask button:hover{filter:brightness(1.05)}
 .ask button:active{transform:translateY(1px)}
 .answer{padding:16px 0 60px;background:#fff}
-.chat-log{min-height:380px;border:2px solid #111;border-radius:8px;background:#fff;padding:16px;overflow:auto}
+.chat-log{min-height:380px;max-height: 600px;overflow-y: auto;border:2px solid #111;border-radius:8px;background:#fff;padding:16px;overflow:auto}
 .msg{display:flex;margin:10px 0}
 .msg.user{justify-content:flex-end}
 .msg.bot{justify-content:flex-start}

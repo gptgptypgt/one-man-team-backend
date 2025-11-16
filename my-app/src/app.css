@@ -5,9 +5,108 @@ html, body, #root {
 }
 
 /* 공통 */
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+.wrap { 
+  max-width: 960px; 
+  margin: 0 auto; 
+  padding: 0 16px; 
+}
 
-/* 장바구니 */
+/* 페이지 전체 폭 제한 */
+.page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+/* ================================
+    🔥 다나와 구조 레이아웃 (중앙만 스크롤)
+================================ */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 260px; /* 좌 / 중앙 / 우 */
+  gap: 20px;
+  margin-top: 20px;
+  align-items: start;
+}
+
+/* 좌측 고정 (부품 선택) */
+.side-nav {
+  position: sticky;
+  top: 140px; /* 헤더 + 배너 만큼 내리기 */
+  height: fit-content;
+}
+
+/* 우측 고정 (필터) */
+.side-filter {
+  position: sticky;
+  top: 140px;
+  height: fit-content;
+}
+
+/* 중앙 콘텐츠 */
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🔥 중앙 상품 리스트만 스크롤 */
+.product-scroll-box {
+  max-height: calc(100vh - 250px); /* 화면에서 위 요소들 제외한 만큼 */
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* 스크롤바 스타일 (선택) */
+.product-scroll-box::-webkit-scrollbar {
+  width: 6px;
+}
+.product-scroll-box::-webkit-scrollbar-thumb {
+  background: #aaa;
+  border-radius: 10px;
+}
+.product-scroll-box::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+/* ================================
+      페이지네이션
+================================ */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin: 16px 0 32px;
+}
+
+.page-number,
+.page-btn {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.page-number.is-active {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  font-weight: 700;
+}
+
+.page-btn:disabled,
+.page-number:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ================================
+      장바구니 디자인
+================================ */
 .cart-summary { padding: 24px 0; }
 .page-title { margin: 0 0 16px; font-size: 24px; font-weight: 800; }
 
@@ -30,40 +129,40 @@ html, body, #root {
   padding: 10px 14px; border: 1px solid #e5e7eb; border-radius: 8px;
   background: #fff; color: #111; font-weight: 700; cursor: pointer;
 }
-/* === Cart page: 가운데 정렬 === */
-.cart-summary{
-  max-width: 760px;          /* 카드 폭 */
-  margin: 24px auto 80px;    /* auto로 수평 가운데 */
+
+/* 중앙 정렬 */
+.cart-summary {
+  max-width: 760px;
+  margin: 24px auto 80px;
 }
 
-/* 보기 좋게 카드화(선택) */
-.cart-summary .page-title{
+.cart-summary .page-title {
   font-size: 28px;
   font-weight: 900;
   color: var(--green);
   margin: 0 0 14px;
 }
 
-.cart-summary .summary-box{
+.cart-summary .summary-box {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 16px 18px;
 }
 
-.cart-summary .total{
+.cart-summary .total {
   font-size: 22px;
   font-weight: 900;
   margin-top: 10px;
 }
 
-.cart-summary .buttons{
+.cart-summary .buttons {
   display: flex;
   gap: 10px;
   margin-top: 16px;
 }
 
-.cart-summary .btn-order{
+.cart-summary .btn-order {
   background: #2563eb;
   color: #fff;
   border: 0;
@@ -71,7 +170,8 @@ html, body, #root {
   padding: 10px 14px;
   cursor: pointer;
 }
-.cart-summary .btn-continue{
+
+.cart-summary .btn-continue {
   background: #fff;
   color: #111;
   border: 1px solid var(--line);

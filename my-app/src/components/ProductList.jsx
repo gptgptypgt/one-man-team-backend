@@ -1,4 +1,4 @@
-// src/components/ProductList.jsx
+import "./ProductList.css";
 
 const CPU_IMAGE_MAP = {
   "인텔 코어i5-14세대 14600K (랩터레이크 리프레시) (벌크)": "/image/cpu/인텔 코어i5-14세대 14600K (랩터레이크 리프레시) (벌크).png",
@@ -245,62 +245,86 @@ export default function ProductList({ rows = [] }) {
     <div className="product-list">
       {rows.map((p) => (
         <div key={p.id} className="product-card">
-          <img
-            src={getImageSrc(p)}
-            alt={
-              p.cpu_name ||
-              p.gpu_name ||
-              p.md_name ||
-              p.pw_name ||
-              "이미지 없음"
-            }
-          />
 
-          <div className="info">
-            <strong>
-              {p.cpu_name || p.gpu_name || p.md_name || p.pw_name}
-            </strong>
+          {/* ▶ 왼쪽 이미지 */}
+          <div className="product-left">
+            <img
+              src={getImageSrc(p)}
+              alt={
+                p.cpu_name ||
+                p.gpu_name ||
+                p.mb_name ||
+                p.psu_name ||
+                "이미지 없음"
+              }
+              className="product-image"
+            />
+          </div>
 
+          {/* ▶ 오른쪽 정보 */}
+          <div className="product-right">
+
+            {/* 상품명 */}
+            <div className="product-name">
+              {p.cpu_name || p.gpu_name || p.mb_name || p.psu_name}
+            </div>
+
+            {/* CPU */}
             {p.cpu_name && (
-              <>
-                <p>제조사: {p.cpu_brand || "정보 없음"}</p>
-                <p>코어 수: {p.cpu_cores || "정보 없음"}</p>
-                <p>쓰레드 수: {p.cpu_thread || "정보 없음"}</p>
-                <p>세대: {p.cpu_gener || "정보 없음"}</p>
-                <p>소켓 수: {p.cpu_socket || "정보 없음"}</p>
-                <p>가격: {p.cpu_price || "정보 없음"}</p>
-              </>
-            )}
+  <>
+    <div className="product-spec-line">
+      제조사: {p.cpu_brand || "-"} · 
+      코어: {p.cpu_cores || "-"} · 
+      쓰레드: {p.cpu_thread || "-"} · 
+      세대: {p.cpu_gener || "-"} · 
+      소켓: {p.cpu_socket || "-"}
+    </div>
+    <p className="product-price">{p.cpu_price}</p>
+  </>
+)}
 
+
+            {/* GPU */}
             {p.gpu_name && (
-              <>
-                <p>제조사: {p.gpu_vendor || "정보 없음"}</p>
-                <p>VRAM: {p.gpu_vram || "-"}</p>
-                <p>칩셋: {p.gpu_chipset || "-"}</p>
-                <p>시리즈: {p.gpu_series || "-"}</p>
-                <p>가격: {p.gpu_price || "정보 없음"}</p>
-              </>
-            )}
+  <>
+    <div className="product-spec-line">
+      제조사: {p.gpu_vendor || "-"} · 
+      VRAM: {p.gpu_vram || "-"}GB · 
+      칩셋: {p.gpu_chipset || "-"} · 
+      시리즈: {p.gpu_series || "-"}
+    </div>
+    <p className="product-price">{p.gpu_price}</p>
+  </>
+)}
 
+
+            {/* 메인보드 */}
             {p.mb_name && (
-              <>
-                <p>칩셋: {p.mb_chipset || "정보 없음"}</p>
-                <p>소켓: {p.mb_socket || "정보 없음"}</p>
-                <p>메모리 규격: {p.mb_mem || "정보 없음"}</p>
-                <p>폼팩터: {p.mb_form || "정보 없음"}</p>
-                <p>가격: {p.mb_price || "정보 없음"}</p>
-              </>
-            )}
+  <>
+    <div className="product-spec-line">
+      칩셋: {p.mb_chipset || "-"} · 
+      소켓: {p.mb_socket || "-"} · 
+      메모리: {p.mb_mem || "-"} · 
+      폼팩터: {p.mb_form || "-"}
+    </div>
+    <p className="product-price">{p.mb_price}</p>
+  </>
+)}
 
+
+            {/* 파워 */}
             {p.psu_name && (
-              <>
-                <p>정격출력: {p.psu_watt || "정보 없음"}</p>
-                <p>80Plus: {p.psu_80plus || "정보 없음"}</p>
-                <p>폼팩터: {p.psu_form || "정보 없음"}</p>
-                <p>케이블타입: {p.psu_cable || "정보 없음"}</p>
-                <p>가격: {p.psu_price || "정보 없음"}</p>
-              </>
-            )}
+  <>
+    <div className="product-spec-line">
+      정격: {p.psu_watt || "-"}W · 
+      80Plus: {p.psu_80plus || "-"} · 
+      폼팩터: {p.psu_form || "-"} · 
+      케이블: {p.psu_cable || "-"}
+    </div>
+    <p className="product-price">{p.psu_price}</p>
+  </>
+)}
+
 
             <a
               href={
@@ -311,9 +335,11 @@ export default function ProductList({ rows = [] }) {
               }
               target="_blank"
               rel="noreferrer"
+              className="product-link"
             >
               상품보기 🔗
             </a>
+
           </div>
         </div>
       ))}

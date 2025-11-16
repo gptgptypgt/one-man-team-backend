@@ -13,99 +13,167 @@ import SideFilter from "./components/SideFilter.jsx";
 import AiQuote from "./pages/AiQuote.jsx";
 import Misc from "./pages/Misc.jsx";
 import Events from "./pages/Events.jsx";
-import Notebooks from "./pages/Notebooks";
+import Notebooks from "./pages/Notebooks.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./components/signup.jsx";
-import Favorites from "./pages/Favorites";
+import Favorites from "./pages/Favorites.jsx";
 import Faq from "./pages/Faq.jsx";
 import Cart from "./pages/Cart.jsx";
 
 import "./App.css";
 
 const CATEGORIES = ["CPU", "그래픽카드", "메인보드", "파워"];
+const PAGE_SIZE = 10;
 
+/* ================================
+    HOME PAGE
+================================ */
 function Home() {
   const [category, setCategory] = useState("CPU");
   const [filters, setFilters] = useState({});
   const [serverRows, setServerRows] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  // ✅ 필터, 검색어, 카테고리 변경 시마다 서버에 자동 요청
+  const [page, setPage] = useState(1);
+
+  /* 🔥 서버 요청 */
   useEffect(() => {
     const params = new URLSearchParams();
     params.append("category", category);
 
     if (searchText.trim()) params.append("search", searchText);
 
-    // ✅ 공통 필터 처리 (각 필터 키에 대해 배열 -> 문자열 변환)
     Object.entries(filters).forEach(([key, values]) => {
-      if (values && values.length > 0) {
+      if (values?.length > 0) {
         params.append(key, values.join(","));
       }
     });
 
-    // ✅ 요청 URL
     const url = `http://localhost:8080/api/products?${params.toString()}`;
     console.log("요청 URL:", url);
 
     fetch(url)
-      .then((res) => res.json())
+      .then((r) => r.json())
       .then((data) => {
-        console.log("✅ 받아온 데이터:", data);
         setServerRows(Array.isArray(data) ? data : []);
       })
       .catch((err) => console.error("❌ 상품 로딩 오류:", err));
   }, [category, filters, searchText]);
 
+  /* 필터 바뀌면 1페이지로 이동 */
+  useEffect(() => {
+    setPage(1);
+  }, [category, filters, searchText]);
+
+  /* 페이지 데이터 */
+  const pagedRows = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return serverRows.slice(start, start + PAGE_SIZE);
+  }, [serverRows, page]);
+
+  const totalPages = Math.max(1, Math.ceil(serverRows.length / PAGE_SIZE));
+
   return (
     <>
       <Banner>정보통신학과 파이팅 💪</Banner>
       <CardRow />
-      <main className="wrap layout">
-        {/* 왼쪽 카테고리 선택 */}
-        <aside className="side-nav">
-          <h4>부품 선택</h4>
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              className={c === category ? "is-active" : ""}
-              onClick={() => setCategory(c)}
+
+      {/* ⭐ 페이지 전체 중앙 정렬 */}
+      <div className="page-container">
+        {/* ⭐ 3열 레이아웃 */}
+        <main className="wrap layout">
+          
+          {/* 왼쪽 카테고리 */}
+          <aside className="side-nav">
+            <h4>부품 선택</h4>
+            {CATEGORIES.map((c) => (
+              <button
+                key={c}
+                className={c === category ? "is-active" : ""}
+                onClick={() => setCategory(c)}
+              >
+                {c}
+              </button>
+            ))}
+          </aside>
+
+          {/* 중앙 영역 */}
+          <section className="content">
+            {/* 검색창 */}
+            <form
+              className="hero-search"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setSearchText(e.target.querySelector("input").value);
+              }}
             >
-              {c}
-            </button>
-          ))}
-        </aside>
+              <input type="search" placeholder="상품명을 검색하세요." />
+              <button>검색</button>
+            </form>
 
-        {/* 중앙: 검색 + 상품 목록 */}
-        <section className="content">
-          <form
-            className="hero-search"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSearchText(e.target.querySelector("input").value);
-            }}
-          >
-            <input type="search" placeholder="상품명을 검색하세요." />
-            <button>검색</button>
-          </form>
+            {/* 상단 제목 + 상품 수 */}
+            <ProductInfo
+              title={category}
+              totalText="상품수: "
+              totalCount={`${serverRows.length}개`}
+            />
 
-          <ProductInfo
-            title={category}
-            totalText="상품수: "
-            totalCount={`${serverRows?.length || 0}개`}
-          />
-          <ProductList rows={serverRows} />
-        </section>
+            {/* ⭐ 상품만 스크롤 박스 */}
+            <div className="product-scroll-box">
+              <ProductList rows={pagedRows} />
+            </div>
 
-        {/* 오른쪽 필터 */}
-        <aside className="side-filter" id="sideFilter">
-          <SideFilter category={category} onFilterChange={setFilters} />
-        </aside>
-      </main>
+            {/* ⭐ 페이지네이션 */}
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button
+                  className="page-btn"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  이전
+                </button>
+
+                {Array.from({ length: totalPages }).map((_, idx) => {
+                  const num = idx + 1;
+                  return (
+                    <button
+                      key={num}
+                      className={
+                        num === page ? "page-number is-active" : "page-number"
+                      }
+                      onClick={() => setPage(num)}
+                    >
+                      {num}
+                    </button>
+                  );
+                })}
+
+                <button
+                  className="page-btn"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                >
+                  다음
+                </button>
+              </div>
+            )}
+          </section>
+
+          {/* 오른쪽 필터 */}
+          <aside className="side-filter" id="sideFilter">
+            <SideFilter category={category} onFilterChange={setFilters} />
+          </aside>
+
+        </main>
+      </div>
     </>
   );
 }
 
+/* ================================
+    MAIN APP ROUTER
+================================ */
 export default function App() {
   const location = useLocation();
   const [cartItems, setCartItems] = useState([]);
@@ -122,10 +190,10 @@ export default function App() {
   function handleAddToCart(product, category) {
     const uniqueId = `${category}-${product.id}`;
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === uniqueId);
-      if (existing)
-        return prev.map((item) =>
-          item.id === uniqueId ? { ...item, qty: item.qty + 1 } : item
+      const exist = prev.find((i) => i.id === uniqueId);
+      if (exist)
+        return prev.map((i) =>
+          i.id === uniqueId ? { ...i, qty: i.qty + 1 } : i
         );
       return [...prev, { ...product, id: uniqueId, qty: 1 }];
     });
@@ -136,6 +204,7 @@ export default function App() {
   return (
     <>
       {!hideHeader && <Header cartCount={cartItems.length} />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/ai" element={<AiQuote />} />
@@ -159,6 +228,7 @@ export default function App() {
           element={<Cart cartItems={cartItems} onAdd={handleAddToCart} />}
         />
       </Routes>
+
       <Footer />
     </>
   );

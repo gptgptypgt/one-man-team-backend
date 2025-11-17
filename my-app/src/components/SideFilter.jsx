@@ -205,8 +205,8 @@ export default function SideFilter({ category, onFilterChange }) {
                 {[
                   "RTX 50 ",
                   "RTX 30 ",
-                  "RX 9600 ",
-                  "RX 9700 ",
+                  "RX 9060 ",
+                  "RX 9070 ",
                 ].map((s) => (
                   <label key={s}>
                     <input

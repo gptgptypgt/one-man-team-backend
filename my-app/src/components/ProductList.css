@@ -28,11 +28,11 @@
 
 /* 이미지 */
 .product-image {
-  width: 70px;
-  height: 70px;
+  width: 0.005px;
+  height: 0.005px;
   object-fit: contain;
   border: 1px solid #eee;
-  border-radius: 6px;
+  border-radius: 2px;
   background: #fafafa;
 }
 

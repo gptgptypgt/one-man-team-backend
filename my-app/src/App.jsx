@@ -30,37 +30,49 @@ function Home() {
   const [serverRows, setServerRows] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  // ✅ 필터, 검색어, 카테고리 변경 시마다 서버에 자동 요청
+  // ⭐ 페이지네이션 상태 추가
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
+
+  // ⭐ API 요청
   useEffect(() => {
     const params = new URLSearchParams();
     params.append("category", category);
-
     if (searchText.trim()) params.append("search", searchText);
 
-    // ✅ 공통 필터 처리 (각 필터 키에 대해 배열 -> 문자열 변환)
     Object.entries(filters).forEach(([key, values]) => {
       if (values && values.length > 0) {
         params.append(key, values.join(","));
       }
     });
 
-    // ✅ 요청 URL
     const url = `http://localhost:8080/api/products?${params.toString()}`;
-    console.log("요청 URL:", url);
 
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        console.log("✅ 받아온 데이터:", data);
         setServerRows(Array.isArray(data) ? data : []);
+        setPage(1); // 필터/검색 변경시 1페이지로 이동
       })
       .catch((err) => console.error("❌ 상품 로딩 오류:", err));
   }, [category, filters, searchText]);
+
+
+  // ⭐ 현재 페이지의 데이터만 잘라서 가져오기
+  const pagedRows = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return serverRows.slice(start, start + PAGE_SIZE);
+  }, [serverRows, page]);
+
+  // ⭐ 총 페이지 수 계산
+  const totalPages = Math.max(1, Math.ceil(serverRows.length / PAGE_SIZE));
+
 
   return (
     <>
       <Banner>정보통신학과 파이팅 💪</Banner>
       <CardRow />
+
       <main className="wrap layout">
         {/* 왼쪽 카테고리 선택 */}
         <aside className="side-nav">
@@ -76,8 +88,9 @@ function Home() {
           ))}
         </aside>
 
-        {/* 중앙: 검색 + 상품 목록 */}
+        {/* 중앙 콘텐츠 */}
         <section className="content">
+          {/* 검색 */}
           <form
             className="hero-search"
             onSubmit={(e) => {
@@ -94,7 +107,47 @@ function Home() {
             totalText="상품수: "
             totalCount={`${serverRows?.length || 0}개`}
           />
-          <ProductList rows={serverRows} />
+
+          {/* 🔥 상품 스크롤 박스 */}
+          <div className="product-scroll-box">
+            <ProductList rows={pagedRows} />
+          </div>
+
+          {/* 🔥 페이지네이션 */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className="page-btn"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                이전
+              </button>
+
+              {Array.from({ length: totalPages }).map((_, idx) => {
+                const num = idx + 1;
+                return (
+                  <button
+                    key={num}
+                    className={
+                      num === page ? "page-number is-active" : "page-number"
+                    }
+                    onClick={() => setPage(num)}
+                  >
+                    {num}
+                  </button>
+                );
+              })}
+
+              <button
+                className="page-btn"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+              >
+                다음
+              </button>
+            </div>
+          )}
         </section>
 
         {/* 오른쪽 필터 */}

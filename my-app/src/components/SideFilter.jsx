@@ -203,10 +203,10 @@ export default function SideFilter({ category, onFilterChange }) {
               <h5>시리즈</h5>
               <div className="grid">
                 {[
-                  "GeForce RTX 50 Series",
-                  "GeForce RTX 30 Series",
-                  "Radeon RX 9600 Series",
-                  "Radeon RX 9700 Series",
+                  "RTX 50 ",
+                  "RTX 30 ",
+                  "RX 9600 ",
+                  "RX 9700 ",
                 ].map((s) => (
                   <label key={s}>
                     <input
@@ -232,12 +232,12 @@ export default function SideFilter({ category, onFilterChange }) {
             <div className="filter-group">
               <h5>제조사</h5>
               <div className="grid">
-                {["ASUS", "MSI", "Gigabyte", "ASRock"].map((v) => (
+                {["ASUS", "MSI", "GIGABYTE", "ASROCK"].map((v) => (
                   <label key={v}>
                     <input
                       type="checkbox"
                       checked={selectedFilters.vendor?.includes(v) || false}
-                      onChange={(e) => handleChange("vendor", v, e.target.checked)}
+                      onChange={(e) => handleChange("mb_vendor", v, e.target.checked)}
                     />
                     {v}
                   </label>
@@ -325,7 +325,7 @@ export default function SideFilter({ category, onFilterChange }) {
             <div className="filter-group">
               <h5>제조사</h5>
               <div className="grid">
-                {["Micronics", "Seasonic", "Enermax", "Corsair", "FSP"].map((v) => (
+                {["SUPERFLOWER", "DARKFLASH", "CORSAIR", "MONTECH", "ZALMAN", ""].map((v) => (
                   <label key={v}>
                     <input
                       type="checkbox"
@@ -359,7 +359,7 @@ export default function SideFilter({ category, onFilterChange }) {
             <div className="filter-group">
               <h5>80PLUS 인증</h5>
               <div className="grid">
-                {["Bronze", "Silver", "Gold", "Platinum"].map((grade) => (
+                {["BRONZE", "SLIVER", "GOLD", "PLATINUM"].map((grade) => (
                   <label key={grade}>
                     <input
                       type="checkbox"

@@ -46,14 +46,14 @@
 
 /* 상품명 */
 .product-name {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   color: #2b6f3e;
 }
 
 /* 스펙 한 줄 */
 .product-spec-line {
-  font-size: 14px;
+  font-size: 10px;
   color: #666;
 }
 
@@ -66,13 +66,13 @@
 }
 
 .product-price {
-  font-size: 22px;
+  font-size: 15px;
   color: #2b6f3e;
   font-weight: bold;
 }
 
 .product-link {
-  font-size: 14px;
+  font-size: 10px;
   text-decoration: underline;
   color: #2b6f3e;
 }

@@ -270,7 +270,7 @@ export default function ProductList({ rows = [] }) {
             {/* GPU 정보 */}
             {p.gpu_name && (
               <div className="product-spec-line">
-                제조사: {p.gpu_vendor || "-"} ·
+                제조사: {p.gpu_vend || "-"} ·
                 VRAM: {p.gpu_vram || "-"} ·
                 칩셋: {p.gpu_chipset || "-"} ·
                 시리즈: {p.gpu_series || "-"}

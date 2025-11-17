@@ -236,6 +236,15 @@ const getImageSrc = (p) => {
   return "/noimg.png";
 };
 
+// ✅ 상품 링크 매핑 함수 (중요!)
+const getProductLink = (p) => {
+  if (p.cpu_link) return p.cpu_link;
+  if (p.gpu_link) return p.gpu_link;
+  if (p.mb_link) return p.mb_link;
+  if (p.psu_link) return p.psu_link;
+  return null;
+};
+
 export default function ProductList({ rows = [] }) {
   if (!rows.length) {
     return <p>불러올 상품이 없습니다 😥</p>;
@@ -271,74 +280,72 @@ export default function ProductList({ rows = [] }) {
 
             {/* CPU */}
             {p.cpu_name && (
-  <>
-    <div className="product-spec-line">
-      제조사: {p.cpu_brand || "-"} · 
-      코어: {p.cpu_cores || "-"} · 
-      쓰레드: {p.cpu_thread || "-"} · 
-      세대: {p.cpu_gener || "-"} · 
-      소켓: {p.cpu_socket || "-"}
-    </div>
-    <p className="product-price">{p.cpu_price}</p>
-  </>
-)}
-
+              <>
+                <div className="product-spec-line">
+                  제조사: {p.cpu_brand || "-"} · 
+                  코어: {p.cpu_cores || "-"} · 
+                  쓰레드: {p.cpu_thread || "-"} · 
+                  세대: {p.cpu_gener || "-"} · 
+                  소켓: {p.cpu_socket || "-"}
+                </div>
+                <p className="product-price">{p.cpu_price}</p>
+              </>
+            )}
 
             {/* GPU */}
             {p.gpu_name && (
-  <>
-    <div className="product-spec-line">
-      제조사: {p.gpu_vendor || "-"} · 
-      VRAM: {p.gpu_vram || "-"}GB · 
-      칩셋: {p.gpu_chipset || "-"} · 
-      시리즈: {p.gpu_series || "-"}
-    </div>
-    <p className="product-price">{p.gpu_price}</p>
-  </>
-)}
-
+              <>
+                <div className="product-spec-line">
+                  제조사: {p.gpu_vendor || "-"} · 
+                  VRAM: {p.gpu_vram || "-"} · 
+                  칩셋: {p.gpu_chipset || "-"} · 
+                  시리즈: {p.gpu_series || "-"}
+                </div>
+                <p className="product-price">{p.gpu_price}</p>
+              </>
+            )}
 
             {/* 메인보드 */}
             {p.mb_name && (
-  <>
-    <div className="product-spec-line">
-      칩셋: {p.mb_chipset || "-"} · 
-      소켓: {p.mb_socket || "-"} · 
-      메모리: {p.mb_mem || "-"} · 
-      폼팩터: {p.mb_form || "-"}
-    </div>
-    <p className="product-price">{p.mb_price}</p>
-  </>
-)}
-
+              <>
+                <div className="product-spec-line">
+                  칩셋: {p.mb_chipset || "-"} · 
+                  소켓: {p.mb_socket || "-"} · 
+                  메모리: {p.mb_mem || "-"} · 
+                  폼팩터: {p.mb_form || "-"}
+                </div>
+                <p className="product-price">{p.mb_price}</p>
+              </>
+            )}
 
             {/* 파워 */}
             {p.psu_name && (
-  <>
-    <div className="product-spec-line">
-      정격: {p.psu_watt || "-"}W · 
-      80Plus: {p.psu_80plus || "-"} · 
-      폼팩터: {p.psu_form || "-"} · 
-      케이블: {p.psu_cable || "-"}
-    </div>
-    <p className="product-price">{p.psu_price}</p>
-  </>
-)}
+              <>
+                <div className="product-spec-line">
+                  정격: {p.psu_watt || "-"}W · 
+                  80Plus: {p.psu_80plus || "-"} · 
+                  폼팩터: {p.psu_form || "-"} · 
+                  케이블: {p.psu_cable || "-"}
+                </div>
+                <p className="product-price">{p.psu_price}</p>
+              </>
+            )}
 
-
+            {/* 🔗 상품보기 (링크 완전 수정됨) */}
             <a
-              href={
-                p.cpu_link ||
-                p.gpu_link ||
-                p.mb_link ||
-                p.psu_link
-              }
-              target="_blank"
-              rel="noreferrer"
-              className="product-link"
-            >
-              상품보기 🔗
-            </a>
+  href={p.cpu_link || p.gpu_link || p.mb_link || p.psu_link}
+  target="_blank"
+  rel="noreferrer"
+  className="product-link"
+  onClick={(e) => {
+    e.stopPropagation();  // 부모 클릭 무시
+    // 그냥 href로 이동하게 두기
+  }}
+>
+  상품보기 🔗
+</a>
+
+
 
           </div>
         </div>

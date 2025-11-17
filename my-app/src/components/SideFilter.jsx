@@ -236,7 +236,7 @@ export default function SideFilter({ category, onFilterChange }) {
                   <label key={v}>
                     <input
                       type="checkbox"
-                      checked={selectedFilters.vendor?.includes(v) || false}
+                      checked={selectedFilters.mb_vendor?.includes(v) || false}
                       onChange={(e) => handleChange("mb_vendor", v, e.target.checked)}
                     />
                     {v}

@@ -219,58 +219,36 @@ const PSU_IMAGE_MAP = {
 
 const getImageSrc = (p) => {
   if (p.image_link) return p.image_link;
-
-  if (p.cpu_name) {
-    return CPU_IMAGE_MAP[p.cpu_name] || "/images/cpu/default_cpu.png";
-  }
-  if (p.gpu_name) {
-    return GPU_IMAGE_MAP[p.gpu_name] || "/images/gpu/default_gpu.png";
-  }
-  if (p.mb_name) {
-    return MB_IMAGE_MAP[p.mb_name] || "/images/mainboard/default_mb.png";
-  }
-  if (p.psu_name) {
-    return PSU_IMAGE_MAP[p.psu_name] || "/images/psu/default_psu.png";
-  }
-
+  if (p.cpu_name) return CPU_IMAGE_MAP[p.cpu_name] || "/images/cpu/default_cpu.png";
+  if (p.gpu_name) return GPU_IMAGE_MAP[p.gpu_name] || "/images/gpu/default_gpu.png";
+  if (p.mb_name) return MB_IMAGE_MAP[p.mb_name] || "/images/mainboard/default_mb.png";
+  if (p.psu_name) return PSU_IMAGE_MAP[p.psu_name] || "/images/psu/default_psu.png";
   return "/noimg.png";
 };
 
-// ✅ 상품 링크 매핑 함수 (중요!)
+// 링크 선택
 const getProductLink = (p) => {
-  if (p.cpu_link) return p.cpu_link;
-  if (p.gpu_link) return p.gpu_link;
-  if (p.mb_link) return p.mb_link;
-  if (p.psu_link) return p.psu_link;
-  return null;
+  return p.cpu_link || p.gpu_link || p.mb_link || p.psu_link || null;
 };
 
 export default function ProductList({ rows = [] }) {
-  if (!rows.length) {
-    return <p>불러올 상품이 없습니다 😥</p>;
-  }
+  if (!rows.length) return <p>불러올 상품이 없습니다 😥</p>;
 
   return (
     <div className="product-list">
       {rows.map((p) => (
         <div key={p.id} className="product-card">
 
-          {/* ▶ 왼쪽 이미지 */}
+          {/* ===== 왼쪽: 이미지 ===== */}
           <div className="product-left">
             <img
               src={getImageSrc(p)}
-              alt={
-                p.cpu_name ||
-                p.gpu_name ||
-                p.mb_name ||
-                p.psu_name ||
-                "이미지 없음"
-              }
+              alt={p.cpu_name || p.gpu_name || p.mb_name || p.psu_name}
               className="product-image"
             />
           </div>
 
-          {/* ▶ 오른쪽 정보 */}
+          {/* ===== 오른쪽 전체 정보 ===== */}
           <div className="product-right">
 
             {/* 상품명 */}
@@ -278,74 +256,65 @@ export default function ProductList({ rows = [] }) {
               {p.cpu_name || p.gpu_name || p.mb_name || p.psu_name}
             </div>
 
-            {/* CPU */}
+            {/* CPU 정보 */}
             {p.cpu_name && (
-              <>
-                <div className="product-spec-line">
-                  제조사: {p.cpu_brand || "-"} · 
-                  코어: {p.cpu_cores || "-"} · 
-                  쓰레드: {p.cpu_thread || "-"} · 
-                  세대: {p.cpu_gener || "-"} · 
-                  소켓: {p.cpu_socket || "-"}
-                </div>
-                <p className="product-price">{p.cpu_price}</p>
-              </>
+              <div className="product-spec-line">
+                제조사: {p.cpu_brand || "-"} · 
+                코어: {p.cpu_cores || "-"} · 
+                쓰레드: {p.cpu_thread || "-"} · 
+                세대: {p.cpu_gener || "-"} · 
+                소켓: {p.cpu_socket || "-"}
+              </div>
             )}
 
-            {/* GPU */}
+            {/* GPU 정보 */}
             {p.gpu_name && (
-              <>
-                <div className="product-spec-line">
-                  제조사: {p.gpu_vendor || "-"} · 
-                  VRAM: {p.gpu_vram || "-"} · 
-                  칩셋: {p.gpu_chipset || "-"} · 
-                  시리즈: {p.gpu_series || "-"}
-                </div>
-                <p className="product-price">{p.gpu_price}</p>
-              </>
+              <div className="product-spec-line">
+                제조사: {p.gpu_vendor || "-"} ·
+                VRAM: {p.gpu_vram || "-"} ·
+                칩셋: {p.gpu_chipset || "-"} ·
+                시리즈: {p.gpu_series || "-"}
+              </div>
             )}
 
-            {/* 메인보드 */}
+            {/* 메인보드 정보 */}
             {p.mb_name && (
-              <>
-                <div className="product-spec-line">
-                  칩셋: {p.mb_chipset || "-"} · 
-                  소켓: {p.mb_socket || "-"} · 
-                  메모리: {p.mb_mem || "-"} · 
-                  폼팩터: {p.mb_form || "-"}
-                </div>
-                <p className="product-price">{p.mb_price}</p>
-              </>
+              <div className="product-spec-line">
+                제조사: {p.mb_vendor || "-"} ·
+                칩셋: {p.mb_chipset || "-"} ·
+                소켓: {p.mb_socket || "-"} ·
+                메모리: {p.mb_mem || "-"} ·
+                폼팩터: {p.mb_form || "-"}
+              </div>
             )}
 
-            {/* 파워 */}
+            {/* 파워 정보 */}
             {p.psu_name && (
-              <>
-                <div className="product-spec-line">
-                  정격: {p.psu_watt || "-"}W · 
-                  80Plus: {p.psu_80plus || "-"} · 
-                  폼팩터: {p.psu_form || "-"} · 
-                  케이블: {p.psu_cable || "-"}
-                </div>
-                <p className="product-price">{p.psu_price}</p>
-              </>
+              <div className="product-spec-line">
+                제조사: {p.psu_vendor || "-"} ·
+                정격: {p.psu_watt || "-"}W ·
+                80Plus: {p.psu_80plus || "-"} ·
+                폼팩터: {p.psu_form || "-"}
+              </div>
             )}
 
-            {/* 🔗 상품보기 (링크 완전 수정됨) */}
-            <a
-  href={p.cpu_link || p.gpu_link || p.mb_link || p.psu_link}
-  target="_blank"
-  rel="noreferrer"
-  className="product-link"
-  onClick={(e) => {
-    e.stopPropagation();  // 부모 클릭 무시
-    // 그냥 href로 이동하게 두기
-  }}
->
-  상품보기 🔗
-</a>
+            {/* 가격 + 링크 한 줄 */}
+            <div className="price-row">
+              <span className="product-price">
+                {p.cpu_price || p.gpu_price || p.mb_price || p.psu_price}
+              </span>
 
-
+              {getProductLink(p) && (
+                <a
+                  href={getProductLink(p)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="product-link"
+                >
+                  상품보기 🔗
+                </a>
+              )}
+            </div>
 
           </div>
         </div>

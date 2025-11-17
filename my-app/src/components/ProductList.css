@@ -1,110 +1,78 @@
+/* 전체 리스트 컨테이너 */
 .product-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 10px;
+  gap: 20px;
 }
 
-/* 카드 전체 */
+/* 각 상품 카드 */
 .product-card {
-  display: flex;
+  display: flex;            /*  ← 여기가 핵심! 좌우 배치 */
   flex-direction: row;
-  align-items: flex-start;
-  gap: 14px;
-
-  padding: 1px 2px;
-  background: #ffffff;
-  border: 1px solid #c7e7ce;
+  padding: 15px;
+  border: 1px solid #d9d9d9;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-
-  transition: 0.2s ease-in-out;
+  background: white;
+  gap: 20px;
 }
 
-.product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 3px 7px rgba(0,0,0,0.1);
+/* 왼쪽 이미지 영역 */
+.product-left {
+  width: 140px;
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
-/* 이미지 */
 .product-image {
-  width: 0.005px;
-  height: 0.005px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
   border: 1px solid #eee;
-  border-radius: 2px;
+  border-radius: 4px;
   background: #fafafa;
 }
 
-/* 오른쪽 영역 */
+
+/* 오른쪽 정보 */
 .product-right {
-  flex: 1;
+  flex: 1;       /* 나머지 공간 전부 사용 */
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 /* 상품명 */
 .product-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: #0f4c2b;
-  margin-bottom: 4px;
-}
-
-/* 상세정보 묶음 */
-.product-info-block {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-/* 상세 정보 */
-.product-detail {
-  font-size: 13px;
-  color: #555;
-}
-
-/* 가격 */
-.product-price {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: bold;
-  color: #0c6a1f;
-  margin-top: 5px;
+  color: #2b6f3e;
 }
 
-/* 링크 */
-.product-link {
-  margin-top: 6px;
-  font-size: 13px;
-  color: #006400;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
+/* 스펙 한 줄 */
 .product-spec-line {
-  font-size: 13px;
-  color: #555;
-  white-space: nowrap; /* 한 줄 유지 */
-  overflow: hidden;
-  text-overflow: ellipsis; /* 넘치면 ... 표시 */
+  font-size: 14px;
+  color: #666;
 }
 
-/* 🔥 상품 리스트 스크롤 박스 */
-.product-scroll-box {
-  max-height: 800px;       /* 원하는 높이로 조절 (다나와 비슷한 높이) */
-  overflow-y: auto;
-  padding-right: 10px;     /* 스크롤바 때문에 글씨 안 잘리게 */
+/* 가격 + 상품보기 */
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
 }
 
-/* 스크롤바 꾸미기 (선택) */
-.product-scroll-box::-webkit-scrollbar {
-  width: 6px;
+.product-price {
+  font-size: 22px;
+  color: #2b6f3e;
+  font-weight: bold;
 }
-.product-scroll-box::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border-radius: 10px;
-}
-.product-scroll-box::-webkit-scrollbar-track {
-  background: #f0f0f0;
+
+.product-link {
+  font-size: 14px;
+  text-decoration: underline;
+  color: #2b6f3e;
 }

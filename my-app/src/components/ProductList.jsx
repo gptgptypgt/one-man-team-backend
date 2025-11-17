@@ -337,13 +337,9 @@ export default function ProductList({ rows = [] }) {
   target="_blank"
   rel="noreferrer"
   className="product-link"
-  onClick={(e) => {
-    e.stopPropagation();  // 부모 클릭 무시
-    // 그냥 href로 이동하게 두기
-  }}
 >
   상품보기 🔗
-</a>
+            </a>
 
 
 

@@ -325,7 +325,7 @@ export default function SideFilter({ category, onFilterChange }) {
             <div className="filter-group">
               <h5>제조사</h5>
               <div className="grid">
-                {["SUPERFLOWER", "DARKFLASH", "CORSAIR", "MONTECH", "ZALMAN", ""].map((v) => (
+                {["SUPERFLOWER", "DARKFLASH", "CORSAIR", "MONTECH", "ZALMAN", "SEGOTEP", "SEASONIC", "MICRONICS", "MAXELITE", "DEEPCOOL", "ABKO", "ANTEC", "COOLERMASTER"].map((v) => (
                   <label key={v}>
                     <input
                       type="checkbox"

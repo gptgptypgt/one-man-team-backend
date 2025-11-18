@@ -30,14 +30,15 @@ function Home() {
   const [serverRows, setServerRows] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  // ⭐ 페이지네이션 상태 추가
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
 
-  // ⭐ API 요청
+  // ✅ API 요청
   useEffect(() => {
+    const effectiveCategory = category && category.trim() ? category : "CPU";
+
     const params = new URLSearchParams();
-    params.append("category", category);
+    params.append("category", effectiveCategory);
     if (searchText.trim()) params.append("search", searchText);
 
     Object.entries(filters).forEach(([key, values]) => {
@@ -46,27 +47,26 @@ function Home() {
       }
     });
 
-    const url = `http://localhost:8080/api/products?${params.toString()}`;
+    // ✅ EC2용 — localhost 대신 실제 서버 주소 사용
+    const url = `http://43.200.39.240:8080/api/products?${params.toString()}`;
+    console.log("📡 요청 URL:", url);
 
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
+        console.log("📦 응답 데이터:", data);
         setServerRows(Array.isArray(data) ? data : []);
-        setPage(1); // 필터/검색 변경시 1페이지로 이동
+        setPage(1);
       })
       .catch((err) => console.error("❌ 상품 로딩 오류:", err));
   }, [category, filters, searchText]);
 
-
-  // ⭐ 현재 페이지의 데이터만 잘라서 가져오기
   const pagedRows = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
     return serverRows.slice(start, start + PAGE_SIZE);
   }, [serverRows, page]);
 
-  // ⭐ 총 페이지 수 계산
   const totalPages = Math.max(1, Math.ceil(serverRows.length / PAGE_SIZE));
-
 
   return (
     <>
@@ -74,7 +74,6 @@ function Home() {
       <CardRow />
 
       <main className="wrap layout">
-        {/* 왼쪽 카테고리 선택 */}
         <aside className="side-nav">
           <h4>부품 선택</h4>
           {CATEGORIES.map((c) => (
@@ -88,9 +87,7 @@ function Home() {
           ))}
         </aside>
 
-        {/* 중앙 콘텐츠 */}
         <section className="content">
-          {/* 검색 */}
           <form
             className="hero-search"
             onSubmit={(e) => {
@@ -108,12 +105,10 @@ function Home() {
             totalCount={`${serverRows?.length || 0}개`}
           />
 
-          {/* 🔥 상품 스크롤 박스 */}
           <div className="product-scroll-box">
             <ProductList rows={pagedRows} />
           </div>
 
-          {/* 🔥 페이지네이션 */}
           {totalPages > 1 && (
             <div className="pagination">
               <button
@@ -150,7 +145,6 @@ function Home() {
           )}
         </section>
 
-        {/* 오른쪽 필터 */}
         <aside className="side-filter" id="sideFilter">
           <SideFilter category={category} onFilterChange={setFilters} />
         </aside>
@@ -173,40 +167,37 @@ export default function App() {
   }, [cartItems]);
 
   function handleAddToCart(product, category) {
-  const uniqueId = `${category}-${product.id}`;
-  setCartItems((prev) => {
-    const existing = prev.find((item) => item.id === uniqueId);
-    if (existing)
-      return prev.map((item) =>
-        item.id === uniqueId ? { ...item, qty: item.qty + 1 } : item
-      );
-    return [...prev, { ...product, id: uniqueId, qty: 1 }];
-  });
-}
-
-// ✅ 상품 개별 삭제
-function handleRemoveFromCart(productId) {
-  setCartItems(prev => prev.filter(item => item.id !== productId));
-}
-
-// ✅ 수량 변경
-function handleUpdateQty(productId, delta) {
-  setCartItems(prev =>
-    prev.map(item =>
-      item.id === productId
-        ? { ...item, qty: Math.max(1, item.qty + delta) }
-        : item
-    )
-  );
-}
-
-// ✅ 전체 비우기
-function handleClearCart() {
-  if (window.confirm("장바구니를 모두 비우시겠습니까?")) {
-    setCartItems([]);
-    localStorage.removeItem("cartItems");
+    const uniqueId = `${category}-${product.id}`;
+    setCartItems((prev) => {
+      const existing = prev.find((item) => item.id === uniqueId);
+      if (existing)
+        return prev.map((item) =>
+          item.id === uniqueId ? { ...item, qty: item.qty + 1 } : item
+        );
+      return [...prev, { ...product, id: uniqueId, qty: 1 }];
+    });
   }
-}
+
+  function handleRemoveFromCart(productId) {
+    setCartItems((prev) => prev.filter((item) => item.id !== productId));
+  }
+
+  function handleUpdateQty(productId, delta) {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === productId
+          ? { ...item, qty: Math.max(1, item.qty + delta) }
+          : item
+      )
+    );
+  }
+
+  function handleClearCart() {
+    if (window.confirm("장바구니를 모두 비우시겠습니까?")) {
+      setCartItems([]);
+      localStorage.removeItem("cartItems");
+    }
+  }
 
   const hideHeader = ["/faq", "/favorites"].includes(location.pathname);
 
@@ -234,14 +225,14 @@ function handleClearCart() {
         <Route
           path="/cart"
           element={
-            <Cart 
+            <Cart
               cartItems={cartItems}
               onRemoveFromCart={handleRemoveFromCart}
               onUpdateQty={handleUpdateQty}
               onClearCart={handleClearCart}
-              />
-            }
-          />
+            />
+          }
+        />
       </Routes>
       <Footer />
     </>

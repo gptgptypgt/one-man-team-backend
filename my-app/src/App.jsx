@@ -48,7 +48,7 @@ function Home() {
     });
 
     // ✅ EC2용 — localhost 대신 실제 서버 주소 사용
-    const url = `http://43.200.39.240:8080/api/products?${params.toString()}`;
+    const url = `/api/products?${params.toString()}`;
     console.log("📡 요청 URL:", url);
 
     fetch(url)
